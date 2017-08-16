@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "nodemon": "^1.11.0"
+    "knex": "^0.13.0",
+    "nodemon": "^1.11.0",
+    "pg": "^7.1.2"
   }
 }

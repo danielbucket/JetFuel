@@ -1,20 +1,19 @@
 // import baseRoute from './urlEndpoints.js';
-const baseRoute   = require('./urlEndpoints.js')
-const http        = require('http');
-const url         = require('url');
-const server      = http.createServer();
+
 const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
 
+// DATABASE CONFIGURATION
+const environment = process.env.NODE_ENV || 'development'
+const configuration = require('../knexfile')[environment]
+const db = require('knex')(configuration)
+
+app.set('port', process.env.PORT || 3300)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended: true} ))
-app.use(express.static('public'))
 
-app.set('port', process.env.PORT || 3000)
-
-app.locals.title = "Jet Fuel"
 
 // client side route(?)
 app.get('/', (request, response) => {
@@ -22,47 +21,105 @@ app.get('/', (request, response) => {
 })
 
 
-// for when a user clicks on a folder to see a list of its contents
-app.get(`${baseRoute}folder/:id`, (request, response) => {
 
-  db('folders').where({id: request.body.id})
-    .then(data => response.status(200).json({data}))
-    .catch(error => console.log('error fetching folder contents: ', erorr))
-})
-
-// for the list of existing folders to load when the dropdown box is clicked
-app.get(`${baseRoute}folder`, (request, response) => {
-
+// GET ALL EXISTING FOLDERS FROM THE SERVER
+app.get('/api/v1/folders', (request, response) => {
+  // CHECKS OUT
   db('folders').select()
-    .then(data = response.status(200).json({data}))
-    .catch(error => console.log('error getting all folders: ', error))
+  .then(data => {
+    response.status(200).json({ data })
+  })
+  .catch(error => {
+    response.status(500).json({ error })
+  })
 })
 
-// to call a single url
-app.get(`${baseRoute}shorturl/:id`, (request, response) => {
-
-  db('shorturl').where({id: 'id'})
-    .then(data => response.status(200).json({data}))
-    .catch(error => console.log('error getting a single url: ', error))
+// GET ALL EXSTING URLS FROM THE SERVER
+app.get('/api/v1/shortURL', (request, response) => {
+  // CHECKS OUT
+  db('urls').select()
+    .then(data => {
+      response.status(200).json({ data })
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    })
 })
 
-// make a new folder
-app.post(`${baseRoute}folder`, (request, response) => {
+// POST A NEW FOLDER
+app.post('/api/v1/folders', (request, response) => {
+  // CHECKS OUT
+  const newFolder = request.body
 
-  db('folder').insert(request.body, ['*'])
-    .then(data => response.status(200).json({data}))
-    .catch(error => console.log('error posting a new folder: ', error))
+  for (let requireParameter of ['name']) {
+    if (!newFolder[requireParameter]) {
+      return response.status(422).json({
+        error: `Missing required parameter ${requireParameter}`
+      })
+    }
+  }
+
+  db('folders').insert(newFolder, 'id')
+    .then(data => {
+      response.status(200).json({ id: data[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    })
 })
 
-// add new folder and new shortURL at the same time
-app.post(`${baseRoute}folder`, () => {
-  // does creating a new folder and new shorturl at the same time require that two seperate fetch calls should be made?
+// POST A NEW shortURL !!< I DONT THINK I NEED THIS >!!
+app.post('/api/v1/shortURL', (request, response) => {
+  // CHECKS OUT
+  const newShortURL = request.body
+
+  for (let requireParameter of ['link']) {
+    if (!newShortURL[requireParameter]) {
+      return response.status(422).json({
+        error: `Missing required parameter ${requireParameter}`
+      })
+    }
+  }
+
+  db('urls').insert(newShortURL, 'id')
+    .then(data => {
+      repsonse.status(200).json({ 'id': data[0] })
+    })
+    .catch(error => {
+      status.response(422).json({ error })
+    })
 })
 
-// add a new shorturl
-app.post(`${baseRoute}shorturl`, (request, response) => {
+// GET ALL URLS LINKED TO A SPECIFIC FOLDER
+app.get('/api/v1/folders/:id/shortURL', (request, response) => {
+  // CHECKS OUT
+  db('urls').where('folder_id', request.params.id).select()
+    .then(shortURLs => {
+      response.status(200).json({ shortURLs })
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    })
+})
 
-  db('shorurl').insert(request.body, ['*'])
-    .then(data => response.status(200).json({data}))
-    .catch(error => console.log('error post a new shorturl', error))
+// GET A FOLDER SPECIFIED BY THE ID
+app.get('/api/v1/folders/:id', (request, response) => {
+  // CHECKS OUT
+  db('folders').where('id', request.params.id).select()
+    .then(folder => {
+        if (folder.length) {
+        response.status(200).json({ folder })
+      } else {
+        response.status(404).json({
+          error: `Could not find a folder with the id of ${request.params.id}`
+        })
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error })
+    })
+})
+
+app.listen(app.get('port'), () => {
+  console.log(`Server is running on ${app.get('port')}`)
 })

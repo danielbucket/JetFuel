@@ -2,21 +2,19 @@ import { baseRoute } from '../../server/server';
 
 export default class FetchCalls {
 
-  makeNewFolder() {
+  getAllFolders() {
+    fetch('/api/v1/folders')
+      .then(resp => resp.josn())
+      .catch(error => console.log('error fetching all folders: ', error))
+  }
 
-    const addNewFolder = fetch(`${baseRoute}folder`, () => {
-                          .then(resp => resp.json())
-                          .then(data => data)
-                          .catch(error => console.log('error :', error))
+  postNewFolder(folderName) {
+    fetch('/api/v1/folders', {
+      method: "POST",
+      body: JSON.stringify(folderName),
+      headers: {'Content-Type':'application/json'}
     })
-
-    const addNewUrl = fetch(`${baseRoute}shorturl`, () => {
-                        .then(resp => resp.json())
-                        .then(data => data)
-                        .catch(error => console.log('error :', error))
-    })
-
-    return return Promise.all([addNewFolder, addNewUrl])
-                    .then()
+    .then(resp => resp.json)
+    .catch(error => console.log('error fetching new folder: ', error))
   }
 }
