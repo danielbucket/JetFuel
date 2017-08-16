@@ -17,4 +17,4 @@ app.locals.title = "Jet Fuel"
 
 
 // create a folder
-app.get('')
+app.get('/')
