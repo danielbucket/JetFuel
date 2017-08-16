@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: .75;
+  background-color: rgba(96, 125, 139, 0.82)
+  }
+
+header {
+  height: 100px;
+  font-family: 'Sedgwick Ave Display', cursive;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.title {
+  letter-spacing: 10px;
+  color: #a4e2b5;
+  font-size: 64px;
+  margin: 20px auto;
+}
+
+.fuel {
+  margin-left: 13px;
+  color: #b6c4c7;
+}
+
+.main {
+  margin: 30px auto;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.standard-box-size {
+  width: 30%;
+  height: 500px;
+  /*border: 1px solid red;*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.form-field {
+  display: block;
+}
+
+.form, .input, .submit-btn {
+  width: 95%;
+  height: 30px;
+
+}
+
+.upper-input !important {
+  border-top: 3px solid #a4e2b5;
+  border-bottom: none;
+}
+
+.input {
+  border-right: 3px solid #a4e2b5;
+  border-left: 3px solid #a4e2b5;
+  border-top: 1px solid #b6c4c7;
+}
+
+.submit-btn {
+  height: 50px;
+  margin-top: 10px;
+  background-color: transparent;
+  margin: 0;
+  border: 3px solid #a4e2b5;
+  border-radius: 0 0 10px 10px;
+}
+
+.submit-btn-txt {
+  color: #302626;
+  letter-spacing: 1px;
+}
+
+.new-url-display {
+  margin-top: 400px;
+}
+
+.existing-folders-box {
+
+}
+
+.folder-contents-box {
+
+}
