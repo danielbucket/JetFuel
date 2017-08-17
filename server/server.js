@@ -53,7 +53,7 @@ app.get('/api/v1/shortURL', (request, response) => {
 app.post('/api/v1/folders', (request, response) => {
   // CHECKS OUT
   const newFolder = request.body
-
+  console.log('newFolder: ', newFolder)
   for (let requireParameter of ['name']) {
     if (!newFolder[requireParameter]) {
       return response.status(422).json({
@@ -71,12 +71,11 @@ app.post('/api/v1/folders', (request, response) => {
     })
 })
 
-// POST A NEW shortURL !!< I DONT THINK I NEED THIS >!!
+// POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
   // CHECKS OUT
   const newShortURL = request.body
-
-  for (let requireParameter of ['link']) {
+  for (let requireParameter of ['shortURL']) {
     if (!newShortURL[requireParameter]) {
       return response.status(422).json({
         error: `Missing required parameter ${requireParameter}`
@@ -84,12 +83,12 @@ app.post('/api/v1/shortURL', (request, response) => {
     }
   }
 
-  db('urls').insert(newShortURL, 'id')
+  db('urls').insert(newShortURL, "*")
     .then(data => {
-      repsonse.status(200).json({ 'id': data[0] })
+      response.status(200).json( data[0] )
     })
     .catch(error => {
-      status.response(422).json({ error })
+      response.status(500).json({ error })
     })
 })
 
@@ -98,6 +97,7 @@ app.get('/api/v1/folders/:id/shortURL', (request, response) => {
   // CHECKS OUT
   db('urls').where('folder_id', request.params.id).select()
     .then(shortURLs => {
+      console.log('request at shomeshitty place: ', shortURLs)
       response.status(200).json({ shortURLs })
     })
     .catch(error => {
