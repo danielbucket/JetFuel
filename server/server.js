@@ -1,8 +1,8 @@
-// import baseRoute from './urlEndpoints.js';
-
 const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
+const cors        = require('express-cors')
+
 
 // DATABASE CONFIGURATION
 const environment = process.env.NODE_ENV || 'development'
@@ -13,6 +13,9 @@ app.set('port', process.env.PORT || 3300)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended: true} ))
+app.use(cors({
+  allowedOrigins: ['localhost:3000', 'localhost:3001']
+}))
 
 
 // client side route(?)

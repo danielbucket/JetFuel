@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Jet Fule</title>
     <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave+Display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave+Display|Titillium+Web:300,400" rel="stylesheet">
   </head>
   <body>
     <header>
@@ -12,30 +12,59 @@
     </header>
     <main class="main">
 
-      <section class="form-field standard-box-size">
-        <div class="form" action="index.html" method="post">
-          <input id="new-folder" class="input new-folder-input upper-input" type="text" name="new folder" value="NEW FOLDER NAME">
-          <input id="long-url" class="input new-url-input" type="text" name="new url" value="URL TO SHORTEN">
-          <button class="submit-btn" type="button" name="button">
-            <span class="submit-btn-txt">
-              This is a submit button, click it with your clicker thing
-            </span>
-          </button>
-        </div>
-        <section class="new-url-display">
-          new url display
-        </section>
-      </section>
+
+
+
+
+
 
     <section class="existing-folders-box standard-box-size">
-      existing folders
+      <div class="folder-input-box">
+        <h3 class="folders-instruction">Create a new folder here</h3>
+        <input id='' class="input new-folder-input" type="text" name="existing folders" value="find a folder">
+
+        <div class="folder-dropdown-container">
+          <h3>Or select from an existing folder</h3>
+          <div class="dropdown-content">
+            <!-- <a href="#">Folder 1</a>
+            <a href="#">Folder 2</a>
+            <a href="#">Folder 3</a>
+            <a href="#">Folder 4</a> -->
+          </div>
+
+        </div>
+      </div>
     </section>
+
+
+
+
+
+
+
+
+
 
     <section class="folder-contents-box standard-box-size">
-      folder contents
+      <h3>folder contents</h3>
+      <div class="folder-contents">
+
+      </div>
     </section>
 
-
+    <section class="form-field standard-box-size">
+      <div class="form" action="index.html" method="post">
+        <input id="long-url" class="input new-url-input" type="text" name="new url" value="URL TO SHORTEN">
+        <button class="submit-btn" type="button" name="button">
+          <span class="submit-btn-txt">
+            This is a submit button, click it with your clicker thing
+          </span>
+        </button>
+      </div>
+      <section class="new-url-display">
+        new url display
+      </section>
+    </section>
 
     </main>
 

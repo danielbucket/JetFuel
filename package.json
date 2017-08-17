@@ -11,8 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "express-cors": "0.0.3",
     "knex": "^0.13.0",
     "nodemon": "^1.11.0",
     "pg": "^7.1.2"
-  }
+  },
+  "devDependencies": {}
 }
