@@ -5,7 +5,6 @@ const getFolderByID = id => {
       fetch(`http://localhost:3300/api/v1/folders/${details.folder[0].id}/shortURL`)
       .then(resp => resp.json())
       .then(urlData => {
-        console.log(urlData.shortURLs[0].shortURL)
         printFolderDetails(urlData.shortURLs[0].shortURL)
       })
     })
@@ -75,21 +74,23 @@ $('.dropdown-content').on('click', '.folder-item', e => {
 })
 
 $('.new-url-input').on('focus', e => {
-  e.target.value = ''
+  if (e.target.value.length = 0) {
+    e.target.value = 'Make a new folder'
+  }
 })
 
 $('.new-folder-input').on('focus', e => {
   e.target.value = ''
 })
 
-// $('.new-folder-input').on('blur', e => {
-//   if (e.target.value.length > 0) {
-//     e.target.value = ''
-//   } else {
-//     e.target.value = 'Make a new folder'
-//   }
-// })
-//
+$('.new-folder-input').on('blur', e => {
+  console.log(e.target.value.length)
+
+  if (e.target.value.length = 0) {
+    e.target.value = 'Make a new folder'
+  }
+})
+
 // $('.new-url-input').on('blur', e => {
 //   if (e.target.value.length > 0) {
 //     e.target.value = ''
