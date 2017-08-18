@@ -2,7 +2,7 @@ const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
 const cors        = require('express-cors');
-const path        = require('path')
+// const path        = require('path')
 
 
 // DATABASE CONFIGURATION
@@ -15,9 +15,9 @@ app.set('port', process.env.PORT || 3300)
 app.use(express.static(path.join(__dirname + '/../public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended: true} ))
-app.use(cors({
-  allowedOrigins: ['localhost:3000', 'localhost:3001']
-}))
+// app.use(cors({
+//   allowedOrigins: ['localhost:3000', 'localhost:3001']
+// }))
 
 
 // client side route(?)
