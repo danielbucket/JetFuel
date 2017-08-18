@@ -2,15 +2,17 @@ const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
 const cors        = require('express-cors');
+const path        = require('path')
 
 
 // DATABASE CONFIGURATION
 const environment = process.env.NODE_ENV || 'development'
-const configuration = require('./knexfile')[environment]
+const configuration = require('../knexfile')[environment]
 const db = require('knex')(configuration)
 
 app.set('port', process.env.PORT || 3300)
 
+app.use(express.static(path.join(__dirname + '/../public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended: true} ))
 app.use(cors({
@@ -20,8 +22,7 @@ app.use(cors({
 
 // client side route(?)
 app.get('/', (request, response) => {
-  console.log(__dirname)
-  response.sendFile(__dirname + './public/index.html')
+  response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
 
