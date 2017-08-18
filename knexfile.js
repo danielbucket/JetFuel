@@ -7,7 +7,8 @@ module.exports = {
     connection: 'postgres://localhost/jetfueldbase',
     migrations: {
       directory: './db/migrations'
-    }
+    },
+    useNullAsDefault: true
   },
   production: {
     client: 'pg',
@@ -16,6 +17,5 @@ module.exports = {
       directory: './db/migrations'
     },
     useNullAsDefault: true
-  },
-  useNullAsDefault: true
+  }
 };
