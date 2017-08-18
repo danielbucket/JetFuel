@@ -14,6 +14,15 @@ describe('Client Routes', () => {
       done()
     })
   })
+
+  it('sad panda path', done => {
+    chai.request(server)
+    .get('/home')
+    .end((err, response) => {
+      response.should.have.status(404)
+      done()
+    })
+  })
 })
 
 describe('API Routes', () => {
@@ -45,6 +54,14 @@ describe('GET/api/v1/folders', () => {
       done()
     })
   })
+
+  it('sad panda path', done => {
+    chai.request(server)
+    .get('/api/v1/folder')
+    .end((err, response) => {
+      response.should.have.status(404)
+    })
+  })
 })
 
 describe('GET/api/v1/shortURL', () => {
@@ -62,6 +79,15 @@ describe('GET/api/v1/shortURL', () => {
       response.body.data[0].should.have.property('folder_id')
       response.body.data[0].should.have.property('created_at')
       response.body.data[0].should.have.property('updated_at')
+      done()
+    })
+  })
+
+  it('sad panda path', done => {
+    chai.request(server)
+    .get('/api/v1/shortUrl')
+    .end((err, response) => {
+      response.should.have.status(404)
       done()
     })
   })
