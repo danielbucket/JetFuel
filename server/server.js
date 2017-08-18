@@ -123,3 +123,5 @@ app.get('/api/v1/folders/:id', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`Server is running on ${app.get('port')}`)
 })
+
+module.exports = app;
