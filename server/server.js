@@ -1,8 +1,8 @@
 const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
-const path        = require('path')
-
+const path        = require('path');
+const shortHash   = require('short-hash');
 
 // DATABASE CONFIGURATION
 const environment = process.env.NODE_ENV || 'development'
@@ -46,11 +46,21 @@ app.get('/api/v1/shortURL', (request, response) => {
     })
 })
 
+// GET LONG URL FOR REDIRECT
+// app.get('/api/v1/longURL/:id', (request, response) => {
+//
+//   db('urls').where('shortURL', request.body.shortURL).select('longURL')
+//   .then(longURL => response.redirect(301, longURL))
+// })
+
+
+
+
 // POST A NEW FOLDER
 app.post('/api/v1/folders', (request, response) => {
   // CHECKS OUT
   const newFolder = request.body
-  console.log('newFolder: ', newFolder)
+
   for (let requireParameter of ['name']) {
     if (!newFolder[requireParameter]) {
       return response.status(422).json({
@@ -71,7 +81,12 @@ app.post('/api/v1/folders', (request, response) => {
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
   // CHECKS OUT
-  const newShortURL = request.body
+  const newShortURL = {
+    folder_id: request.body.folder_id,
+    shortURL: shortHash(request.body.url),
+    longURL: request.body.url
+   }
+
   for (let requireParameter of ['shortURL']) {
     if (!newShortURL[requireParameter]) {
       return response.status(422).json({
@@ -94,7 +109,6 @@ app.get('/api/v1/folders/:id/shortURL', (request, response) => {
   // CHECKS OUT
   db('urls').where('folder_id', request.params.id).select()
     .then(shortURLs => {
-      console.log('request at shomeshitty place: ', shortURLs)
       response.status(200).json({ shortURLs })
     })
     .catch(error => {

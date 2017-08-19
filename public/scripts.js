@@ -5,7 +5,7 @@ const getFolderByID = id => {
       fetch(`http://localhost:3300/api/v1/folders/${details.folder[0].id}/shortURL`)
       .then(resp => resp.json())
       .then(urlData => {
-        printFolderDetails(urlData.shortURLs[0].shortURL)
+        printFolderDetails(urlData.shortURLs[0])
       })
     })
     .catch(error => console.log('error fetching folder details: ', error))
@@ -18,7 +18,7 @@ const printFolderList = data => {
 
 const printFolderDetails = url => {
   $('.folder-contents').replaceWith(
-    `<a href="http://${url}" class="folder-item">${url}</a>`
+    `<a href="${url.longURL}" class="folder-item">${url.shortURL}</a>`
 )}
 
 const printAllFolders = folder => {
@@ -46,18 +46,16 @@ const postNewFolderAndURL = data => {
   .then(folderID => {
     fetch('http://localhost:3300/api/v1/shortURL', {
       method: "POST",
-      body: JSON.stringify({folder_id: folderID.id, shortURL: data.url}),
+      body: JSON.stringify({folder_id: folderID.id, url: data.url}),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
     .then(data => {
       fetchAllFolders()
       $('.new-url-display').replaceWith(
-        `
-          <a class="new-url-display" href="http://${data.shortURL}">
+        `<a class="new-url-display" href="http://${data.shortURL}">
             ${data.shortURL}
-          </a>
-        `
+          </a>`
       )
     })
     .catch(error => console.log('error posting new url', error))
@@ -65,32 +63,28 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting new URL: ', error))
 }
 
-
-
-
 $('.dropdown-content').on('click', '.folder-item', e => {
   e.preventDefault()
   getFolderByID(e.target.id)
 })
 
-$('.new-url-input').on('focus', e => {
-  if (e.target.value.length = 0) {
-    e.target.value = 'Make a new folder'
-  }
-})
+// $('.new-url-input').on('focus', e => {
+//   if (e.target.value.length = 0) {
+//     e.target.value = 'Make a new folder'
+//   }
+// })
 
-$('.new-folder-input').on('focus', e => {
-  e.target.value = ''
-})
+// $('.new-folder-input').on('focus', e => {
+//   e.target.value = ''
+// })
 
-$('.new-folder-input').on('blur', e => {
-  console.log(e.target.value.length)
-
-  if (e.target.value.length = 0) {
-    e.target.value = 'Make a new folder'
-  }
-})
-
+// $('.new-folder-input').on('blur', e => {
+//
+//   if (e.target.value.length = 0) {
+//     e.target.value = 'Make a new folder'
+//   }
+// })
+//
 // $('.new-url-input').on('blur', e => {
 //   if (e.target.value.length > 0) {
 //     e.target.value = ''
@@ -108,25 +102,6 @@ $('.submit-btn').on('click', () => {
     folderName: folderName
   })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-// submit users input
-$('.submit-btn').on('click', () => {
-
-  const folder  = $('#new-folder').val()
-  const longURL = $('#long-url').val()
-})
-
 
 
 $(document).ready(() => {
