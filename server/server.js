@@ -46,13 +46,6 @@ app.get('/api/v1/shortURL', (request, response) => {
     })
 })
 
-// GET LONG URL FOR REDIRECT
-// app.get('/api/v1/longURL/:id', (request, response) => {
-//
-//   db('urls').where('shortURL', request.body.shortURL).select('longURL')
-//   .then(longURL => response.redirect(301, longURL))
-// })
-
 
 
 
