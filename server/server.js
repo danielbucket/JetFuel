@@ -20,8 +20,6 @@ app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
-
-
 // GET ALL EXISTING FOLDERS FROM THE SERVER
 app.get('/api/v1/folders', (request, response) => {
   // CHECKS OUT
@@ -31,6 +29,24 @@ app.get('/api/v1/folders', (request, response) => {
   })
   .catch(error => {
     response.status(500).json({ error })
+  })
+})
+
+// RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
+app.get('/api/v1/checkfolders/:folderName', (request, response) => {
+
+  db('folders').where('name', request.params.folderName).select()
+  .then(folders => {
+
+    if (folders.length === 0) {
+      response.status(200).json({ folders })
+    } else {
+      response.status(500).json('dat foder name arready exrists, prease serect anover')
+    }
+
+  })
+  .catch(error => {
+    response.status(402).json({ error })
   })
 })
 
@@ -46,8 +62,17 @@ app.get('/api/v1/shortURL', (request, response) => {
     })
 })
 
+// GET An EXISTING URL THAT REDIRECTS
+app.get('/api/v1/shortURL/:shorturl', (request, response) => {
 
-
+  db('urls').where('shortURL', request.params.shorturl).select('longURL')
+    .then(data => {
+      response.redirect('http://' + data[0].longURL)
+    })
+      .catch(error => {
+      response.status(500).json({ error })
+    })
+})
 
 // POST A NEW FOLDER
 app.post('/api/v1/folders', (request, response) => {
@@ -110,25 +135,26 @@ app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 })
 
 // GET A FOLDER SPECIFIED BY THE ID
+
+
+// GET A FOLDER SPECIFIED BY THE FOLDER NAME
 app.get('/api/v1/folders/:id', (request, response) => {
   // CHECKS OUT
   db('folders').where('id', request.params.id).select()
     .then(folder => {
-        if (folder.length) {
-        response.status(200).json({ folder })
-      } else {
-        response.status(404).json({
-          error: `Could not find a folder with the id of ${request.params.id}`
-        })
-      }
+      response.status(200).json({folder})
     })
     .catch(error => {
       response.status(500).json({ error })
     })
 })
 
+
+
+
 app.listen(app.get('port'), () => {
   console.log(`Server is running on ${app.get('port')}`)
 })
+
 
 module.exports = app;
