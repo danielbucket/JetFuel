@@ -102,6 +102,7 @@ header {
   text-decoration: none;
 }
 
-.dropdown-content {
-  /*width: 100%;*/
+.folder-item {
+  text-decoration: none;
+  color: black;
 }
