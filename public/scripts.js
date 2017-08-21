@@ -1,18 +1,21 @@
-var serverRoute     = 'http://localhost:3300/api/v1/shortURL/';
-var findFolderPath  = 'http://localhost:3300/api/v1/folders/';
+var baseRoute       = 'http://localhost:3300/api/v1/';
+var findURLsPath    = `${baseRoute}shortURL/`;
+var findFolderPath  = `${baseRoute}folders/`;
+var checkfolders    = `${baseRoute}checkfolders/`;
+
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
 
 
 const getFolderByID = id => {
-  console.log('id', id)
-  fetch(`http://localhost:3300/api/v1/folders/${id}`)
+  fetch(`${findFolderPath}${id}`)
   .then(resp => resp.json())
   .then(details => {
-    fetch(`http://localhost:3300/api/v1/folders/${details.folder[0].id}/shortURL`)
+    fetch(`${findFolderPath}${details.id}/shortURL`)
     .then(resp => resp.json())
-    .then(urlData => {
-      printFolderDetails(urlData.shortURLs[0])
+    .then(urlResponse => {
+      console.log('urlData: ', urlResponse.urlData[0])
+      printFolderDetails(urlResponse.urlData[0])
     })
   })
   .catch(error => console.log('error fetching folder details: ', error))
@@ -20,11 +23,12 @@ const getFolderByID = id => {
 
 const printFolderList = data => {
   $('.dropdown-content').append(
-    `<div class="folder-item" id=${data.id}> ${data.name}</div>`
+    `<div class="folder-item" id=${data.id}>${data.name}</div>`
 )}
 
 const printFolderDetails = url => {
-  let path = `${serverRoute}${url.shortURL}`
+  console.log(url)
+  let path = `${findURLsPath}${url.shortURL}`
 
   $('.folder-contents').empty()
   $('.folder-contents').append(
@@ -38,30 +42,30 @@ const printAllFolders = folder => {
 }
 
 const fetchAllFolders = () => {
-  fetch('http://localhost:3300/api/v1/folders')
+  fetch(findFolderPath)
   .then(resp => resp.json())
   .then(data => printAllFolders(data))
   .catch(error => console.log('error fetching all folders: ', error))
 }
 
 const postNewFolderAndURL = data => {
-  console.log('dataaatta', data)
-  fetch('http://localhost:3300/api/v1/folders', {
+  fetch(findFolderPath, {
     method: "POST",
-    body: JSON.stringify({name: data.folderName}),
+    body: JSON.stringify({name: data.name}),
     headers: {
       "Content-Type": "application/json"
     }
   })
   .then(resp => resp.json())
   .then(folderID => {
-    fetch('http://localhost:3300/api/v1/shortURL', {
+    fetch(findURLsPath, {
       method: "POST",
       body: JSON.stringify({folder_id: folderID.id, url: data.url}),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
     .then(data => {
+      console.log('folderID', data)
       fetchAllFolders()
       $('.new-url-display').replaceWith(
         `<a class="new-url-display" href="http://${data.shortURL}">
@@ -74,23 +78,34 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting new URL: ', error))
 }
 
+const postNewURL = (id, url) => {
+  fetch(findURLsPath, {
+    method: "POST",
+    body: JSON.stringify({folder_id: id, shortURL: url}),
+    headers: {"Content-Type": "application/json"}
+  })
+  .then(resp => resp.json())
+  .then(data => console.log('data: ', data))
+}
+
 const getFolders = data => {
-  let path = `http://localhost:3300/api/v1/checkfolders${data.folderName}`
+  let path = `${checkfolders}${data.folderName}`
 
   fetch(path)
   .then(resp => resp.json())
   .then(info => {
-    if (typeof info === 'string') {
-      console.log(info)
-    } else {
-      console.log('calling postNewFolderAndURL()')
+    if (info.stat === "FOLDER_EXISTS") {
+      console.log('folder does exist')
+      postNewURL(info.id, data.url)
+    } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
+      console.log('folder does not exist')
       postNewFolderAndURL(data)
     }
   })
   .catch(error => console.log('error will robinson!: ', error))
 }
 
-const disFunc = () => {
+const clearInputs = () => {
   let folder = $('.new-folder-input').val()
   let url    = $('.new-url-input').val()
 
@@ -108,39 +123,39 @@ $('.dropdown-content').on('click', '.folder-item', e => {
 })
 
 $('.new-url-input').on('focus', e => {
-  disFunc()
+  clearInputs()
   if (e.target.value === newUrlText) {
     e.target.value = ''
   }
 })
 
 $('.new-url-input').on('blur', e => {
-  disFunc()
+  clearInputs()
   if (e.target.value.length === 0) {
     e.target.value = newUrlText
   }
 })
 
 $('.new-folder-input').on('focus', e => {
-  disFunc()
+  clearInputs()
   if (e.target.value === newFolderText) {
     e.target.value = ''
   }
 })
 
 $('.new-folder-input').on('blur', e => {
-  disFunc()
+  clearInputs()
   if (e.target.value.length === 0) {
     e.target.value = newFolderText
   }
 })
 
 $('.new-folder-input').on('keyup', () => {
-  disFunc()
+  clearInputs()
 })
 
 $('.new-url-input').on('keyup', () => {
-  disFunc()
+  clearInputs()
 })
 
 $('.submit-btn').on('click', () => {
@@ -150,17 +165,11 @@ $('.submit-btn').on('click', () => {
   $('.new-folder-input').val(newFolderText)
   $('.new-url-input').val(newUrlText)
 
-  disFunc()
-
+  clearInputs()
   getFolders({
     url: url,
-    folderName: folderName
+    name: folderName
   })
-
-  // postNewFolderAndURL({
-  //   url: url,
-  //   folderName: folderName
-  // })
 })
 
 

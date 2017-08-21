@@ -33,20 +33,20 @@ app.get('/api/v1/folders', (request, response) => {
 })
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
-app.get('/api/v1/checkfolders/:folderName', (request, response) => {
+app.get(`/api/v1/checkfolders/:folderName`, (request, response) => {
 
   db('folders').where('name', request.params.folderName).select()
   .then(folders => {
 
     if (folders.length === 0) {
-      response.status(200).json({ folders })
-    } else {
-      response.status(500).json('dat foder name arready exrists, prease serect anover')
+      response.status(500).json({ stat: "FOLDER_DOES_NOT_EXIST", folder: folders[0] })
+    } else if (folders[0].name === request.params.folderName) {
+      response.status(302).json({ stat: "FOLDER_EXISTS", folderID: folders[0].id })
     }
 
   })
   .catch(error => {
-    response.status(402).json({ error })
+    response.status(302).json({ error })
   })
 })
 
@@ -62,7 +62,7 @@ app.get('/api/v1/shortURL', (request, response) => {
     })
 })
 
-// GET An EXISTING URL THAT REDIRECTS
+// GET AN EXISTING URL THAT REDIRECTS
 app.get('/api/v1/shortURL/:shorturl', (request, response) => {
 
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
@@ -96,9 +96,11 @@ app.post('/api/v1/folders', (request, response) => {
     })
 })
 
+
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
   // CHECKS OUT
+  console.log('hit', request.body)
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.url),
@@ -122,19 +124,20 @@ app.post('/api/v1/shortURL', (request, response) => {
     })
 })
 
+
 // GET ALL URLS LINKED TO A SPECIFIC FOLDER
 app.get('/api/v1/folders/:id/shortURL', (request, response) => {
   // CHECKS OUT
+  console.log('request.params.id :', request.params.id)
   db('urls').where('folder_id', request.params.id).select()
-    .then(shortURLs => {
-      response.status(200).json({ shortURLs })
+    .then(urlData => {
+      console.log('urlData', urlData[0])
+      response.status(200).json({ urlData })
     })
     .catch(error => {
       response.status(500).json({ error })
     })
 })
-
-// GET A FOLDER SPECIFIED BY THE ID
 
 
 // GET A FOLDER SPECIFIED BY THE FOLDER NAME
@@ -142,14 +145,13 @@ app.get('/api/v1/folders/:id', (request, response) => {
   // CHECKS OUT
   db('folders').where('id', request.params.id).select()
     .then(folder => {
-      response.status(200).json({folder})
+      console.log('urlData from server', folder[0])
+      response.status(200).json(folder[0])
     })
     .catch(error => {
       response.status(500).json({ error })
     })
 })
-
-
 
 
 app.listen(app.get('port'), () => {

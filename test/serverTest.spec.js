@@ -33,7 +33,16 @@ describe('API Routes', () => {
 
   beforeEach( done => {
     // RUN SEED FILE(S)
-    done()
+    knex.migrate.rollback()
+    .then( () => {
+      knex.migrate.latest()
+      .then( () => {
+        knex.seed.run()
+        .then( () => {
+          done()
+        })
+      })
+    })
   })
 })
 
