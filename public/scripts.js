@@ -42,6 +42,9 @@ const printFolderDetails = url => {
 
 const printAllFolders = folder => {
   $('.dropdown-content').empty()
+  $('.dropdown-content').append(
+    `<option class="folder-item" selected="selected">Select A Folder</option>`
+  )
   for (let i = 0; i < folder.data.length; i++) {
     printFolderList(folder.data[i])
   }
@@ -103,7 +106,7 @@ const clearInputs = () => {
   let folder = $('.new-folder-input').val()
   let url    = $('.new-url-input').val()
 
-  if ((folder !== newFolderText) && (url !== newUrlText)) {
+  if ((folder !== newFolderText) && (url !== newUrlText) || folder === 'Select A Folder') {
     $('.submit-btn').prop('disabled', false)
   } else {
     $('.submit-btn').prop('disabled', true)
@@ -148,7 +151,6 @@ $('.new-folder-input').on('blur', e => {
 })
 
 $('.new-folder-input').on('keyup', () => clearInputs())
-
 $('.new-url-input').on('keyup', () => clearInputs())
 
 $('.submit-btn').on('click', () => {

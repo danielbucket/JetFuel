@@ -62,7 +62,7 @@ app.get('/api/v1/shortURL/:shorturl', (request, response) => {
 app.get('/api/v1/folders/:id', (request, response) => {
 
   db('folders').where('id', request.params.id).select()
-    .then(folder => response.status(200).json(folder[0]))
+    .then(folder => response.status(200).json( folder[0] ))
     .catch(error => response.status(500).json({ error }))
 })
 
