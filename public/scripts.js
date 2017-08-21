@@ -34,9 +34,12 @@ const printFolderDetailsList = data => {
 }
 
 const printFolderDetails = url => {
+  const sorted = url.sort((a,b) => {
+    return a.created_at > b.created_at
+  })
   $('.folder-contents-display').empty()
-  for (let i = 0; i < url.length; i++) {
-    printFolderDetailsList(url[i])
+  for (let i = 0; i < sorted.length; i++) {
+    printFolderDetailsList(sorted[i])
   }
 }
 
