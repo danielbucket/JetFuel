@@ -13,38 +13,40 @@
     <main class="main">
 
 
-    <section class="existing-folders-box standard-box-size">
-      <div class="folder-input-box">
-        <h3 class="folders-instruction">Create a new folder here</h3>
-        <div class="folder-dropdown-container">
-          <h3>Or select from an existing folder</h3>
-          <div class="dropdown-content"></div>
+    <section class="standard-box-size">
+      <h3 class="folders-instruction">Create a new folder here</h3>
+      <div class="sub-standard-box">
+
+        <div class="folder-input-box">
+          <input class="input new-folder-input" type="text" name="existing folders" value="Make a new folder">
+            <h3 class="">Or select from an existing folder</h3>
+            <select class="dropdown-content"></select>
         </div>
       </div>
     </section>
 
 
+    <section class="standard-box-size">
+      <h3 class="folders-instruction">New URL to shorten</h3>
+      <div class="sub-standard-box">
 
-    <section class="folder-contents-box standard-box-size">
-      <h3>folder contents</h3>
-      <div class="folder-contents">
-
+        <div class="form" action="index.html" method="post">
+          <input id="long-url" class="input new-url-input" type="text" name="new url" value="Enter a new URL">
+          <button class="submit-btn" type="button" name="button" disabled>
+            <div class="submit-btn-txt">
+              This is the submit button, click it with your clicker thing.
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="form-field standard-box-size">
-      <div class="form" action="index.html" method="post">
-        <input id='' class="input new-folder-input" type="text" name="existing folders" value="Make a new folder">
-        <input id="long-url" class="input new-url-input" type="text" name="new url" value="Enter a new URL">
-        <button class="submit-btn" type="button" name="button" disabled>
-          <div class="submit-btn-txt">
-            This is a submit button, click it with your clicker thing
-          </button>
-        </div>
+
+    <section class="standard-box-size">
+      <h3 class="folders-instruction">Folder Contents</h3>
+      <div class="sub-standard-box">
+        <div class="folder-contents-display"></div>
       </div>
-      <section class="new-url-display">
-        new url display
-      </section>
     </section>
 
     </main>

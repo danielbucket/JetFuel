@@ -6,35 +6,32 @@ var checkfolders    = `${baseRoute}checkfolders/`;
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
 
-
+//>--------------------FUNCTIONS--------------------<//
 const getFolderByID = id => {
   fetch(`${findFolderPath}${id}`)
   .then(resp => resp.json())
   .then(details => {
     fetch(`${findFolderPath}${details.id}/shortURL`)
     .then(resp => resp.json())
-    .then(urlResponse => {
-      printFolderDetails(urlResponse.urlData)
-    })
+    .then(urlResponse => printFolderDetails(urlResponse.urlData))
   })
   .catch(error => console.log('error fetching folder details: ', error))
 }
 
 const printFolderList = data => {
   $('.dropdown-content').append(
-    `<div class="folder-item" id=${data.id}>${data.name}</div>`
+    `<option class="folder-item" id=${data.id}>${data.name}</option>`
 )}
 
 const printFolderDetailsList = data => {
   let path = `${findURLsPath}${data.shortURL}`
-
-  $('.folder-contents').append(
+  $('.folder-contents-display').append(
     `<a href="${path}" class="folder-item">${path}</a>`
   )
 }
 
 const printFolderDetails = url => {
-  $('.folder-contents').empty()
+  $('.folder-contents-display').empty()
   for (let i = 0; i < url.length; i++) {
     printFolderDetailsList(url[i])
   }
@@ -54,7 +51,6 @@ const fetchAllFolders = () => {
 }
 
 const postNewFolderAndURL = data => {
-  console.log(data)
   fetch(findFolderPath, {
     method: "POST",
     body: JSON.stringify({ name: data.name }),
@@ -64,38 +60,26 @@ const postNewFolderAndURL = data => {
   })
   .then(resp => resp.json())
   .then(folderID => {
-    console.log(folderID)
     fetch(findURLsPath, {
       method: "POST",
       body: JSON.stringify({folder_id: folderID.id, shortURL: data.url}),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
-    .then(data => {
-      fetchAllFolders()
-      $('.new-url-display').replaceWith(
-        `<a class="new-url-display" href="http://${data.shortURL}">
-            ${data.shortURL}
-          </a>`
-      )
-    })
+    .then(data => fetchAllFolders())
     .catch(error => console.log('error posting new url', error))
   })
   .catch(error => console.log('error posting new URL: ', error))
 }
 
 const postNewURL = (id, url) => {
-  console.log(id)
   fetch(findURLsPath, {
     method: "POST",
     body: JSON.stringify({folder_id: id, shortURL: url}),
     headers: {"Content-Type": "application/json"}
   })
   .then(resp => resp.json())
-  .then(data => {
-    // call func to print all new folder data(?)
-    console.log('data: ', data)
-  })
+  .then(data => getFolderByID(data.folder_id))
 }
 
 const getFolders = data => {
@@ -122,10 +106,13 @@ const clearInputs = () => {
   }
 }
 
-$('.dropdown-content').on('click', '.folder-item', e => {
-  e.preventDefault()
-  $('.new-folder-input').val(e.target.textContent)
-  getFolderByID(e.target.id)
+//>--------------------EVENTS--------------------<//
+$('.dropdown-content').change(() => {
+  const selected = $('.dropdown-content option:selected')
+
+  $('.new-folder-input').val(selected[0].innerText)
+  clearInputs()
+  getFolderByID(selected[0].id)
 })
 
 $('.new-url-input').on('focus', e => {
@@ -156,13 +143,9 @@ $('.new-folder-input').on('blur', e => {
   }
 })
 
-$('.new-folder-input').on('keyup', () => {
-  clearInputs()
-})
+$('.new-folder-input').on('keyup', () => clearInputs())
 
-$('.new-url-input').on('keyup', () => {
-  clearInputs()
-})
+$('.new-url-input').on('keyup', () => clearInputs())
 
 $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
@@ -177,7 +160,6 @@ $('.submit-btn').on('click', () => {
     name: folderName
   })
 })
-
 
 $(document).ready(() => {
   fetchAllFolders()
