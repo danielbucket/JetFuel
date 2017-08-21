@@ -38,6 +38,7 @@ const printFolderDetails = url => {
 }
 
 const printAllFolders = folder => {
+  $('.dropdown-content').empty()
   for (let i = 0; i < folder.data.length; i++) {
     printFolderList(folder.data[i])
   }
