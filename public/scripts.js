@@ -29,7 +29,7 @@ const printFolderDetailsList = data => {
   let path = `${findURLsPath}${data.shortURL}`
   $('.folder-contents-display').append(
     `<li><a href="${path}" class="folder-item">${path}</a>
-    <div>Created On: ${time}</div></li>`
+    <div class="creation-date">Created On: ${time}</div></li>`
   )
 }
 
