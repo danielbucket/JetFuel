@@ -50,6 +50,7 @@ exports.seed = (knex, Promise) => {
     .then( () => knex('folders').del())
     .then( () => {
       let folderPromises = []
+      
       folderData.forEach(folder => {
         folderPromises.push(createFolder(knex, folder))
       })
