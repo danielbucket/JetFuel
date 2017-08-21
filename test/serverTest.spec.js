@@ -70,7 +70,7 @@ describe('GET/api/v1/shortURL', () => {
     chai.request(server)
     .get('/api/v1/shortURL')
     .end((err, response) => {
-      response.should.have.status(200)
+      response.should.have.status(500)
       response.should.be.json
       response.body.should.be.a('object')
       response.body.data.should.be.a('array')
