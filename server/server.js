@@ -34,6 +34,7 @@ app.get('/api/v1/folders', (request, response) => {
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
+  console.log(request.params)
 
   db('folders').where('name', request.params.folderName).select()
   .then(folders => {
@@ -88,6 +89,7 @@ app.post('/api/v1/folders', (request, response) => {
 
   db('folders').insert(newFolder, 'id')
     .then(data => {
+      console.log('datA :  ', data[0]);
       response.status(200).json({ id: data[0] })
     })
     .catch(error => {
@@ -99,6 +101,7 @@ app.post('/api/v1/folders', (request, response) => {
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
   // CHECKS OUT
+  console.log('reqyest :  ', request.body)
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),

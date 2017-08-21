@@ -54,18 +54,20 @@ const fetchAllFolders = () => {
 }
 
 const postNewFolderAndURL = data => {
+  console.log(data)
   fetch(findFolderPath, {
     method: "POST",
-    body: JSON.stringify({name: data.name}),
+    body: JSON.stringify({ name: data.name }),
     headers: {
       "Content-Type": "application/json"
     }
   })
   .then(resp => resp.json())
   .then(folderID => {
+    console.log(folderID)
     fetch(findURLsPath, {
       method: "POST",
-      body: JSON.stringify({folder_id: folderID.id, url: data.url}),
+      body: JSON.stringify({folder_id: folderID.id, shortURL: data.url}),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
@@ -83,13 +85,17 @@ const postNewFolderAndURL = data => {
 }
 
 const postNewURL = (id, url) => {
+  console.log(id)
   fetch(findURLsPath, {
     method: "POST",
     body: JSON.stringify({folder_id: id, shortURL: url}),
     headers: {"Content-Type": "application/json"}
   })
   .then(resp => resp.json())
-  .then(data => console.log('data: ', data))
+  .then(data => {
+    // call func to print all new folder data(?)
+    console.log('data: ', data)
+  })
 }
 
 const getFolders = data => {
