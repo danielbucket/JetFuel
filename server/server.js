@@ -8,40 +8,30 @@ const shortHash   = require('short-hash');
 const environment = process.env.NODE_ENV || 'development'
 const configuration = require('../knexfile')[environment]
 const db = require('knex')(configuration)
-// ^^ SET UP THE DEVELOPMENT CONFIGURATION STAGE
 
 app.set('port', process.env.PORT || 3300)
-// ^^ TELL THE SERVER WHICH PORT TO LISTEN TO DEFAULTING TO localhost:3300
 
 app.use(express.static(path.join(__dirname + '/../public')))
-// ^^ ALWAYS REFERENCE THE SPECIFIED DOCUMENTS
 app.use(bodyParser.json())
-// ^^
 app.use(bodyParser.urlencoded( {extended: true} ))
-// ^^
 
 // client side route(?)
 app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
-// ^^ ALWAYS SERVE THE STATIC HTML FILE BY DEFAULT
 
 // GET ALL EXISTING FOLDERS FROM THE SERVER
 app.get('/api/v1/folders', (request, response) => {
-// ^^ GET REQUEST TAKING IN TWO ARGUMENTS: THE ENDPOINT AND A CALLBACK
+
   db('folders').select()
-  // ^^ ACCESS THE 'folders' TABLE IN THE DATABASE AND SELECT EVERTHING
   .then(data => response.status(200).json({ data }))
-  // ^^ RESPOND WITH THE APPROPRIATE STATUS CODE AND THEN SEND THE JSONified DATA BACK
   .catch(error => response.status(500).json({ error }))
-  // ^^ IN CASE OF AN ERROR RESPONSD WITH APPROPRIATE STATUS CODE AND THE JSONified ERROR MESSAGE
 })
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
-// ^^ EXPRESS WILL RECOGNIZE :foldername AND ASSIGN IT TO RESPONSE.PARAMS
+
   db('folders').where('name', request.params.folderName).select()
-  // ^^ SEARCH THE FOLDERS DATABASE FOR ALL ITEMS WHERE 'NAME' (A VARIABLE IN THE DATABASE TABLE) AND THE PARAMETERS MATCH
   .then(folders => {
     if (folders.length === 0) {
       response.status(500).json({ stat: "FOLDER_DOES_NOT_EXIST", folder: folders[0] })
@@ -56,7 +46,6 @@ app.get('/api/v1/checkfolders/:folderName', (request, response) => {
 app.get('/api/v1/shortURL', (request, response) => {
 
   db('urls').select()
-//  ^^ ACCESS THE URLS TABLE IN THE DATABASE AND SELECT EVERYTHING
     .then(data => response.status(200).json({ data }))
     .catch(error => response.status(500).json({ error }))
 })
@@ -65,9 +54,7 @@ app.get('/api/v1/shortURL', (request, response) => {
 app.get('/api/v1/shortURL/:shorturl', (request, response) => {
 
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
-// ^^ FIND MATCHING VARIABLES AND RETURN THE TABLE ITEM SPECIFIED IN THE SELECT() FUNCTION
     .then(data => response.redirect('http://' + data[0].longURL))
-// ^^ THE REDIRECT METHOD WILL SEND THE FLOW TO ANOTHER END POINT, OR IN THIS CASE, ANOTHER URL
     .catch(error => response.status(500).json({ error }))
 })
 
@@ -88,7 +75,7 @@ app.post('/api/v1/folders', (request, response) => {
       })
     }
   }
-// ^^ THIS FOR LOOP IS MEANT TO VERIFIY THAT THE PACKAGE RECIEVED HAS THE SPECIFIED VARIABLE AND RESONDS WITH AN ERROR IF IT DOES NOT
+
   db('folders').insert(request.body, 'id')
     .then(data => response.status(200).json({ id: data[0] }))
     .catch(error => response.status(500).json({ error }))
@@ -99,7 +86,6 @@ app.post('/api/v1/shortURL', (request, response) => {
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
-    // ^^ CONVERT THE ORIGINAL LONG URL INTO A SHORT STRING
     longURL: request.body.shortURL
    }
 
@@ -127,6 +113,5 @@ app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`Server is running on ${app.get('port')}`)
 })
-// ^^ LISTEN TO THE PORT (AS DEFINED ABOVE) AND SEND A MESSAGE TO CONSOLE WHEN THE SERVER IS STARTED
 
 module.exports = app;
