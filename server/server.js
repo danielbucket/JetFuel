@@ -33,11 +33,13 @@ app.get('/api/v1/folders', (request, response) => {
 })
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
-app.get(`/api/v1/checkfolders/:folderName`, (request, response) => {
+app.get('/api/v1/checkfolders/:folderName', (request, response) => {
+  console.log(request.params.folderName)
 
   db('folders').where('name', request.params.folderName).select()
   .then(folders => {
-
+    console.log('folders', folders[0])
+    console.log('folders length', folders.length)
     if (folders.length === 0) {
       response.status(500).json({ stat: "FOLDER_DOES_NOT_EXIST", folder: folders[0] })
     } else if (folders[0].name === request.params.folderName) {
@@ -100,11 +102,10 @@ app.post('/api/v1/folders', (request, response) => {
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
   // CHECKS OUT
-  console.log('hit', request.body)
   const newShortURL = {
     folder_id: request.body.folder_id,
-    shortURL: shortHash(request.body.url),
-    longURL: request.body.url
+    shortURL: shortHash(request.body.shortURL),
+    longURL: request.body.shortURL
    }
 
   for (let requireParameter of ['shortURL']) {
@@ -128,10 +129,8 @@ app.post('/api/v1/shortURL', (request, response) => {
 // GET ALL URLS LINKED TO A SPECIFIC FOLDER
 app.get('/api/v1/folders/:id/shortURL', (request, response) => {
   // CHECKS OUT
-  console.log('request.params.id :', request.params.id)
   db('urls').where('folder_id', request.params.id).select()
     .then(urlData => {
-      console.log('urlData', urlData[0])
       response.status(200).json({ urlData })
     })
     .catch(error => {
@@ -145,7 +144,6 @@ app.get('/api/v1/folders/:id', (request, response) => {
   // CHECKS OUT
   db('folders').where('id', request.params.id).select()
     .then(folder => {
-      console.log('urlData from server', folder[0])
       response.status(200).json(folder[0])
     })
     .catch(error => {

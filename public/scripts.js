@@ -14,7 +14,6 @@ const getFolderByID = id => {
     fetch(`${findFolderPath}${details.id}/shortURL`)
     .then(resp => resp.json())
     .then(urlResponse => {
-      console.log('urlData: ', urlResponse.urlData[0])
       printFolderDetails(urlResponse.urlData[0])
     })
   })
@@ -27,7 +26,6 @@ const printFolderList = data => {
 )}
 
 const printFolderDetails = url => {
-  console.log(url)
   let path = `${findURLsPath}${url.shortURL}`
 
   $('.folder-contents').empty()
@@ -65,7 +63,6 @@ const postNewFolderAndURL = data => {
     })
     .then(resp => resp.json())
     .then(data => {
-      console.log('folderID', data)
       fetchAllFolders()
       $('.new-url-display').replaceWith(
         `<a class="new-url-display" href="http://${data.shortURL}">
@@ -78,6 +75,12 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting new URL: ', error))
 }
 
+
+
+
+
+
+
 const postNewURL = (id, url) => {
   fetch(findURLsPath, {
     method: "POST",
@@ -89,21 +92,28 @@ const postNewURL = (id, url) => {
 }
 
 const getFolders = data => {
-  let path = `${checkfolders}${data.folderName}`
+  console.log(data)
 
-  fetch(path)
+  fetch(`${checkfolders}${data.name}`)
   .then(resp => resp.json())
   .then(info => {
+    console.log(info)
     if (info.stat === "FOLDER_EXISTS") {
-      console.log('folder does exist')
-      postNewURL(info.id, data.url)
+      console.log(info.stat)
+      postNewURL(info.folderID, data.url)
     } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
-      console.log('folder does not exist')
+      console.log(info.stat)
       postNewFolderAndURL(data)
     }
   })
   .catch(error => console.log('error will robinson!: ', error))
 }
+
+
+
+
+
+
 
 const clearInputs = () => {
   let folder = $('.new-folder-input').val()
