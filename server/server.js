@@ -34,12 +34,9 @@ app.get('/api/v1/folders', (request, response) => {
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
-  console.log(request.params.folderName)
 
   db('folders').where('name', request.params.folderName).select()
   .then(folders => {
-    console.log('folders', folders[0])
-    console.log('folders length', folders.length)
     if (folders.length === 0) {
       response.status(500).json({ stat: "FOLDER_DOES_NOT_EXIST", folder: folders[0] })
     } else if (folders[0].name === request.params.folderName) {

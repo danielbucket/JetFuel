@@ -14,7 +14,7 @@ const getFolderByID = id => {
     fetch(`${findFolderPath}${details.id}/shortURL`)
     .then(resp => resp.json())
     .then(urlResponse => {
-      printFolderDetails(urlResponse.urlData[0])
+      printFolderDetails(urlResponse.urlData)
     })
   })
   .catch(error => console.log('error fetching folder details: ', error))
@@ -25,13 +25,20 @@ const printFolderList = data => {
     `<div class="folder-item" id=${data.id}>${data.name}</div>`
 )}
 
-const printFolderDetails = url => {
-  let path = `${findURLsPath}${url.shortURL}`
+const printFolderDetailsList = data => {
+  let path = `${findURLsPath}${data.shortURL}`
 
-  $('.folder-contents').empty()
   $('.folder-contents').append(
     `<a href="${path}" class="folder-item">${path}</a>`
-)}
+  )
+}
+
+const printFolderDetails = url => {
+  $('.folder-contents').empty()
+  for (let i = 0; i < url.length; i++) {
+    printFolderDetailsList(url[i])
+  }
+}
 
 const printAllFolders = folder => {
   for (let i = 0; i < folder.data.length; i++) {
@@ -75,12 +82,6 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting new URL: ', error))
 }
 
-
-
-
-
-
-
 const postNewURL = (id, url) => {
   fetch(findURLsPath, {
     method: "POST",
@@ -92,28 +93,17 @@ const postNewURL = (id, url) => {
 }
 
 const getFolders = data => {
-  console.log(data)
-
   fetch(`${checkfolders}${data.name}`)
   .then(resp => resp.json())
   .then(info => {
-    console.log(info)
     if (info.stat === "FOLDER_EXISTS") {
-      console.log(info.stat)
       postNewURL(info.folderID, data.url)
     } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
-      console.log(info.stat)
       postNewFolderAndURL(data)
     }
   })
   .catch(error => console.log('error will robinson!: ', error))
 }
-
-
-
-
-
-
 
 const clearInputs = () => {
   let folder = $('.new-folder-input').val()
