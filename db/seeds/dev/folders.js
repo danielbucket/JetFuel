@@ -1,23 +1,26 @@
 let folderData = [
   { name: 'folderNumber1', urls: [
     {
-      id: 901,
+      id: 1,
+      longURL:  'www.longURL1.com',
       shortURL: 'aaa111',
-      longURL:  'www.longURL1.com'
+      folder_id: 1
     }
   ]},
   { name: 'folderNumber2', urls: [
     {
-      id: 902,
+      id: 2,
+      longURL:  'www.longURL2.com',
       shortURL: 'bbb222',
-      longURL:  'www.longURL2.com'
+      folder_id: 1,
     }
   ]},
   { name: 'folderNumber3', urls: [
     {
-      id: 903,
+      id: 3,
+      longURL:  'www.longURL3.com',
       shortURL: 'ccc333',
-      longURL:  'www.longURL3.com'
+      folder_id: 1
     }
   ]}
 ]
@@ -32,7 +35,9 @@ const createFolder = (knex, folder) => {
     folder.urls.forEach(url => {
       urlPromises.push(
         createURL(knex, {
-          shortURL: url,
+          id: url.id,
+          longURL: url.longURL,
+          shortURL: url.shortURL,
           folder_id: folderID[0]
         })
       )
@@ -50,7 +55,7 @@ exports.seed = (knex, Promise) => {
     .then( () => knex('folders').del())
     .then( () => {
       let folderPromises = []
-      
+
       folderData.forEach(folder => {
         folderPromises.push(createFolder(knex, folder))
       })
