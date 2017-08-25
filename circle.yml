@@ -12,4 +12,4 @@ deployment:
     production:
       branch: master
       heroku:
-        appname: JetFuel
+        appname: jetgas
