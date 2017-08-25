@@ -28,6 +28,10 @@ describe('Client Routes', () => {
       done()
     })
   })
+
+  it('', () => {
+    
+  })
 })
 
 describe('API Routes', () => {
@@ -52,7 +56,7 @@ describe('API Routes', () => {
 })
 
 describe('GET/api/v1/folders', () => {
-  it('should return', done => {
+  xit('should return', done => {
     chai.request(server)
     .get('/api/v1/folders')
     .end((err, response) => {
@@ -71,7 +75,7 @@ describe('GET/api/v1/folders', () => {
 })
 
 describe('GET/api/v1/shortURL', () => {
-  it('should return these values: ', done => {
+  xit('should return these values: ', done => {
     chai.request(server)
     .get('/api/v1/shortURL')
     .end((err, response) => {
