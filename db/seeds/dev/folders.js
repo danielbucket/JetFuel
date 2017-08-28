@@ -25,6 +25,8 @@ let folderData = [
   ]}
 ]
 
+const createURL = (knex, url) => knex('urls').insert(url)
+
 const createFolder = (knex, folder) => {
   return knex('folders').insert({
     name: folder.name
@@ -38,16 +40,12 @@ const createFolder = (knex, folder) => {
           id: url.id,
           longURL: url.longURL,
           shortURL: url.shortURL,
-          folder_id: folderID[0]
+          folder_id: folderID[0] // ??
         })
       )
     })
     return Promise.all(urlPromises)
   })
-}
-
-const createURL = (knex, url) => {
-  return knex('urls').insert(url)
 }
 
 exports.seed = (knex, Promise) => {

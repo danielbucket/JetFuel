@@ -1,26 +1,26 @@
-process.env.NODE_ENV = 'test';
-const chai      = require('chai')
-const should    = chai.should()
-const chaiHTTP  = require('chai-http')
-const server    = require('../server/server');
+const chai           = require('chai');
+const should         = chai.should();
+const chaiHTTP       = require('chai-http');
+const server         = require('../server/server');
 
-const environment = process.env.NODE_ENV || 'development'
-const configuration = require('../knexfile')[environment]
-const db = require('knex')(configuration)
+const environment    = process.env.NODE_ENV || 'development';
+const configuration  = require('../knexfile')[environment];
+const db             = require('knex')(configuration);
 
-chai.use(chaiHTTP)
+chai.use(chaiHTTP);
 
 describe('Client Routes', () => {
-  it('should return status(200)', done => {
+  xit('should return status(200)', done => {
     chai.request(server)
     .get('/')
     .end((err, response) => {
       response.should.have.status(200)
+      response.should.be.html
       done()
     })
   })
 
-  it('sad panda path', done => {
+  xit('sad panda path', done => {
     chai.request(server)
     .get('/home')
     .end((err, response) => {
@@ -31,22 +31,18 @@ describe('Client Routes', () => {
 })
 
 describe('API Routes', () => {
-  before( done => {
-    // RUN MIGRATIONS HERE WHEN TESTING AN ACTUAL DATABASE
-    done()
+  beforeEach(done => {
+    db.migrate.latest()
+    .then(() => db.seed.run())
+    .then(() => done())
   })
 
-  beforeEach( done => {
-    // RUN SEED FILE(S)
-    knex.migrate.rollback()
-    .then( () => {
-      knex.migrate.latest()
-      .then( () => {
-        knex.seed.run()
-        .then( () => {
-          done()
-        })
-      })
+  it('should', done => {
+    chai.request(server)
+    .get('/api/folders')
+    .end((err, res) => {
+      console.log(res.body)
+      done()
     })
   })
 })
