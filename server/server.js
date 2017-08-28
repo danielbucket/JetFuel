@@ -5,8 +5,8 @@ const path        = require('path');
 const shortHash   = require('short-hash');
 
 // DATABASE CONFIGURATION
+process.env.NODE_ENV = 'production'; // ??
 
-process.env.NODE_ENV = 'production';
 const environment = process.env.NODE_ENV || 'development'
 const configuration = require('../knexfile')[environment]
 const db = require('knex')(configuration)
@@ -17,18 +17,19 @@ app.use(express.static(path.join(__dirname + '/../public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended: true} ))
 
-// client side route(?)
 app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
+
 // GET ALL EXISTING FOLDERS FROM THE SERVER
-app.get('/api/v1/folders', (request, response) => {
+app.get('/api/v1/folders/', (request, response) => {
 
   db('folders').select()
   .then(data => response.status(200).json({ data }))
   .catch(error => response.status(500).json({ error }))
 })
+
 
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
@@ -44,6 +45,7 @@ app.get('/api/v1/checkfolders/:folderName', (request, response) => {
   .catch(error => response.status(302).json({ error }))
 })
 
+
 // GET ALL EXSTING URLS FROM THE SERVER
 app.get('/api/v1/shortURL', (request, response) => {
 
@@ -51,6 +53,7 @@ app.get('/api/v1/shortURL', (request, response) => {
     .then(data => response.status(200).json({ data }))
     .catch(error => response.status(500).json({ error }))
 })
+
 
 // GET AN EXISTING URL THAT REDIRECTS
 app.get('/api/v1/shortURL/:shorturl', (request, response) => {
@@ -60,6 +63,7 @@ app.get('/api/v1/shortURL/:shorturl', (request, response) => {
     .catch(error => response.status(500).json({ error }))
 })
 
+
 // GET A FOLDER SPECIFIED BY THE FOLDER NAME
 app.get('/api/v1/folders/:id', (request, response) => {
 
@@ -67,6 +71,7 @@ app.get('/api/v1/folders/:id', (request, response) => {
     .then(folder => response.status(200).json( folder[0] ))
     .catch(error => response.status(500).json({ error }))
 })
+
 
 // POST A NEW FOLDER
 app.post('/api/v1/folders', (request, response) => {
@@ -82,6 +87,7 @@ app.post('/api/v1/folders', (request, response) => {
     .then(data => response.status(200).json({ id: data[0] }))
     .catch(error => response.status(500).json({ error }))
 })
+
 
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
@@ -104,6 +110,7 @@ app.post('/api/v1/shortURL', (request, response) => {
     .catch(error => response.status(500).json({ error }))
 })
 
+
 // GET ALL URLS LINKED TO A SPECIFIC FOLDER
 app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 
@@ -113,7 +120,7 @@ app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 })
 
 app.listen(app.get('port'), () => {
-  console.log(`Server is running on ${app.get('port')}`)
+  console.log(`Server is running on localhost:${app.get('port')}`)
 })
 
 module.exports = app;

@@ -55,7 +55,7 @@ const printAllFolders = folder => {
 }
 
 const fetchAllFolders = () => {
-  fetch(findFolderPath)
+  fetch('api/v1/folders')
   .then(resp => resp.json())
   .then(data => printAllFolders(data))
   .catch(error => console.log('error fetching all folders: ', error))
@@ -95,7 +95,8 @@ const postNewURL = (id, url) => {
 }
 
 const getFolders = data => {
-  fetch(`${checkfolders}${data.name}`)
+  fetch(`/api/v1/checkfolders/${data.name}`)
+  // fetch(`${checkfolders}${data.name}`)
   .then(resp => resp.json())
   .then(info => {
     if (info.stat === "FOLDER_EXISTS") {

@@ -11,7 +11,7 @@ const db = require('knex')(configuration)
 chai.use(chaiHTTP)
 
 describe('Client Routes', () => {
-  xit('should return status(200)', done => {
+  it('should return status(200)', done => {
     chai.request(server)
     .get('/')
     .end((err, response) => {
@@ -20,17 +20,13 @@ describe('Client Routes', () => {
     })
   })
 
-  xit('sad panda path', done => {
+  it('sad panda path', done => {
     chai.request(server)
     .get('/home')
     .end((err, response) => {
       response.should.have.status(404)
       done()
     })
-  })
-
-  it('', () => {
-    
   })
 })
 
