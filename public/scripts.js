@@ -1,8 +1,8 @@
 // var baseRoute       = 'http://localhost:3300/api/v1/';
 var baseRoute       = 'https://jetgas.herokuapp.com/';
-var findURLsPath    = '/api/v1/shortURL';
-var findFolderPath  = '/api/v1/folders';
-var checkfolders    = '/api/v1/checkfolders';
+var findURLsPath    = '/api/v1/shortURL/';
+var findFolderPath  = '/api/v1/folders/';
+var checkfolders    = '/api/v1/checkfolders/';
 
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
