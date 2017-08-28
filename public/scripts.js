@@ -62,8 +62,8 @@ const fetchAllFolders = () => {
 }
 
 const postNewFolderAndURL = data => {
-
-  fetch(findFolderPath, {
+  console.log('hit me', data)
+  fetch('/api/v1/folders/', {
     method: "POST",
     body: JSON.stringify({ name: data.name }),
     headers: {
@@ -95,17 +95,24 @@ const postNewURL = (id, url) => {
 }
 
 const getFolders = data => {
-  fetch(`/api/v1/checkfolders/${data.name}`)
-  // fetch(`${checkfolders}${data.name}`)
-  .then(resp => resp.json())
-  .then(info => {
-    if (info.stat === "FOLDER_EXISTS") {
-      postNewURL(info.folderID, data.url)
-    } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
-      postNewFolderAndURL(data)
-    }
-  })
-  .catch(error => console.log('error will robinson!: ', error))
+// let items = $('.folder-item')
+//
+//   items.map((i, curVal) => {
+//     console.log(curVal)
+//   })
+// console.log(items)
+  postNewFolderAndURL(data)
+
+  // fetch(`/api/v1/checkfolders/${data.name}`)
+  // .then(resp => resp.json())
+  // .then(info => {
+  //   if (info.stat === "FOLDER_EXISTS") {
+  //     postNewURL(info.folderID, data.url)
+  //   } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
+  //     postNewFolderAndURL(data)
+  //   }
+  // })
+  // .catch(error => console.log('error will robinson!: ', error))
 }
 
 const clearInputs = () => {
