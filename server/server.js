@@ -89,6 +89,7 @@ app.post('/api/v1/folders', (request, response) => {
 
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
+
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
