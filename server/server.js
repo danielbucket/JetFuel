@@ -90,19 +90,20 @@ app.post('/api/v1/folders', (request, response) => {
 // POST A NEW shortURL
 app.post('/api/v1/shortURL', (request, response) => {
 
+  for (let requireParameter of ['shortURL']) {
+    if (!request.body[requireParameter]) {
+      return response.status(422).json({
+        error: `Missing required parameter ${requireParameter}`
+      })
+    }
+  }
+  
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
     longURL: request.body.shortURL
    }
 
-  for (let requireParameter of ['shortURL']) {
-    if (!newShortURL[requireParameter]) {
-      return response.status(422).json({
-        error: `Missing required parameter ${requireParameter}`
-      })
-    }
-  }
 
   db('urls').insert(newShortURL, "*")
     .then(data => response.status(200).json( data[0] ))
