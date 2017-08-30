@@ -35,11 +35,12 @@ describe('API Routes', () => {
     db.migrate.latest()
     .then(() => db.seed.run())
     .then(() => done())
+    .catch(error => console.log(error))
   })
 
   it.only('should', done => {
     chai.request(server)
-    .get('/api/folders/')
+    .get('/api/v1/folders/')
     .end((err, res) => {
       console.log(res.body)
       done()

@@ -12,7 +12,7 @@ let folderData = [
       id: 2,
       longURL:  'www.longURL2.com',
       shortURL: 'bbb222',
-      folder_id: 1,
+      folder_id: 1
     }
   ]},
   { name: 'folderNumber3', urls: [
