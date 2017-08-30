@@ -64,7 +64,7 @@ describe('API Routes', () => {
       .end((err, res) => {
         let id = res.body.id
 
-        res.should.have.status(500)
+        res.should.have.status(200)
         res.body.should.have.property('id')
         res.body.should.be.a('object')
 
@@ -72,7 +72,7 @@ describe('API Routes', () => {
         .post('/api/v1/shortURL')
         .send({folder_id:id, shortURL: 'u433nl'})
         .end((err, res) => {
-          res.should.have.status(500)
+          res.should.have.status(200)
           res.body.should.be.a('object')
           res.body.should.have.property('id')
           res.body.should.have.property('folder_id')
