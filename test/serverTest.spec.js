@@ -9,26 +9,26 @@ const db             = require('knex')(configuration);
 
 chai.use(chaiHTTP);
 
-// describe('Client Routes', () => {
-//   xit('should return status(200)', done => {
-//     chai.request(server)
-//     .get('/')
-//     .end((err, response) => {
-//       response.should.have.status(200)
-//       response.should.be.html
-//       done()
-//     })
-//   })
-//
-//   xit('sad panda path', done => {
-//     chai.request(server)
-//     .get('/home')
-//     .end((err, response) => {
-//       response.should.have.status(404)
-//       done()
-//     })
-//   })
-// })
+describe('Client Routes', () => {
+  it('should return status(200)', done => {
+    chai.request(server)
+    .get('/')
+    .end((err, response) => {
+      response.should.have.status(200)
+      response.should.be.html
+      done()
+    })
+  })
+
+  it('should return status(400)', done => {
+    chai.request(server)
+    .get('/home')
+    .end((err, response) => {
+      response.should.have.status(404)
+      done()
+    })
+  })
+})
 
 describe('API Routes', () => {
   beforeEach(done => {
@@ -57,7 +57,7 @@ describe('API Routes', () => {
   })
 
   describe('POST api/v1/folders', () => {
-    it('should bea able to post a new url only after receiving an id from POSTing a new folder', done => {
+    it('should be able to post a new url only after receiving an id from POSTing a new folder', done => {
       chai.request(server)
       .post('/api/v1/folders')
       .send({name: 'TestFolder'})
@@ -86,8 +86,10 @@ describe('API Routes', () => {
         })
       })
     })
+  })
 
-    it('should not be able to post a new url without a valid id', done => {
+  describe('POST SAD api/v1/shortURL', () => {
+    it('01_sad: should not be able to post a new url without a valid id', done => {
       chai.request(server)
       .post('/api/v1/shortURL')
       .send({folder_id: 988433, shortURL: 'b4u8me'})
@@ -97,7 +99,7 @@ describe('API Routes', () => {
       })
     })
 
-    it('should require a specific key value to post a new url', done => {
+    it('02_sad: should require a specific key value to post a new url', done => {
       chai.request(server)
       .post('/api/v1/folders')
       .send({name: 'Broad Hard Shoulders'})
@@ -120,41 +122,22 @@ describe('API Routes', () => {
   })
 })
 
-// describe('GET/api/v1/folders', () => {
-//   xit('should return', done => {
-//     chai.request(server)
-//     .get('/api/v1/folders')
-//     .end((err, response) => {
-//       response.should.have.status(200)
-//       response.should.be.json
-//       response.should.be.a('object')
-//       response.body.data.should.be.a('array')
-//       response.body.data[0].should.be.a('object')
-//       response.body.data[0].should.have.property('id')
-//       response.body.data[0].should.have.property('name')
-//       response.body.data[0].should.have.property('created_at')
-//       response.body.data[0].should.have.property('updated_at')
-//       done()
-//     })
-//   })
-// })
-
-// describe('GET/api/v1/shortURL', () => {
-//   xit('should return these values: ', done => {
-//     chai.request(server)
-//     .get('/api/v1/shortURL')
-//     .end((err, response) => {
-//       response.should.have.status(200)
-//       response.should.be.json
-//       response.body.should.be.a('object')
-//       response.body.data.should.be.a('array')
-//       response.body.data[0].should.be.a('object')
-//       response.body.data[0].should.have.property('id')
-//       response.body.data[0].should.have.property('shortURL')
-//       response.body.data[0].should.have.property('folder_id')
-//       response.body.data[0].should.have.property('created_at')
-//       response.body.data[0].should.have.property('updated_at')
-//       done()
-//     })
-//   })
-// })
+describe('GET /api/v1/shortURL', () => {
+  it('should return these values: ', done => {
+    chai.request(server)
+    .get('/api/v1/shortURL')
+    .end((err, response) => {
+      response.should.have.status(200)
+      response.should.be.json
+      response.body.should.be.a('object')
+      response.body.data.should.be.a('array')
+      response.body.data[0].should.be.a('object')
+      response.body.data[0].should.have.property('id')
+      response.body.data[0].should.have.property('shortURL')
+      response.body.data[0].should.have.property('folder_id')
+      response.body.data[0].should.have.property('created_at')
+      response.body.data[0].should.have.property('updated_at')
+      done()
+    })
+  })
+})
