@@ -62,7 +62,6 @@ const fetchAllFolders = () => {
 }
 
 const postNewFolderAndURL = data => {
-  console.log('hit me', data)
   fetch('/api/v1/folders/', {
     method: "POST",
     body: JSON.stringify({ name: data.name }),
@@ -85,7 +84,7 @@ const postNewFolderAndURL = data => {
 }
 
 const postNewURL = (id, url) => {
-  fetch(findURLsPath, {
+  fetch('/api/v1/shortURL/', {
     method: "POST",
     body: JSON.stringify({folder_id: id, shortURL: url}),
     headers: {"Content-Type": "application/json"}
@@ -94,25 +93,20 @@ const postNewURL = (id, url) => {
   .then(data => getFolderByID(data.folder_id))
 }
 
-const getFolders = data => {
-// let items = $('.folder-item')
-//
-//   items.map((i, curVal) => {
-//     console.log(curVal)
-//   })
-// console.log(items)
-  postNewFolderAndURL(data)
+const makeNewOrAdd = data => {
+  const nameArray = []
 
-  // fetch(`/api/v1/checkfolders/${data.name}`)
-  // .then(resp => resp.json())
-  // .then(info => {
-  //   if (info.stat === "FOLDER_EXISTS") {
-  //     postNewURL(info.folderID, data.url)
-  //   } else if (info.stat === "FOLDER_DOES_NOT_EXIST") {
-  //     postNewFolderAndURL(data)
-  //   }
-  // })
-  // .catch(error => console.log('error will robinson!: ', error))
+  $('.folder-item').each((i,val) => {
+    if(val.innerText === data.name) {
+      nameArray.push({id:val.id, shortURL: data.url})
+    }
+  })
+
+  if(nameArray.length === 1) {
+    postNewURL(nameArray[0].id, nameArray[0].shortURL)
+  } else {
+    postNewFolderAndURL(data)
+  }
 }
 
 const clearInputs = () => {
@@ -174,7 +168,7 @@ $('.submit-btn').on('click', () => {
   $('.new-url-input').val(newUrlText)
 
   clearInputs()
-  getFolders({
+  makeNewOrAdd({
     url: url,
     name: folderName
   })

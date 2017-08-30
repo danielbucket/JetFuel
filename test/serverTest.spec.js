@@ -39,7 +39,7 @@ describe('API Routes', () => {
 
   it.only('should', done => {
     chai.request(server)
-    .get('/api/folders')
+    .get('/api/folders/')
     .end((err, res) => {
       console.log(res.body)
       done()
