@@ -106,7 +106,8 @@ app.post(allURLs, (request, response) => {
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
-    longURL: request.body.shortURL
+    longURL: request.body.shortURL,
+    linkName: request.body.linkName
    }
 
 

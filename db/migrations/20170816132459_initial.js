@@ -12,6 +12,7 @@ exports.up = function(knex, Promise) {
       table.increments('id').primary()
       table.string('longURL')
       table.string('shortURL')
+      table.string('linkName')
       table.integer('folder_id').unsigned()
       table.foreign('folder_id').references('folders.id')
 

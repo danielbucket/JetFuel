@@ -7,6 +7,7 @@ var checkfolders    = '/api/v1/checkfolders/';
 
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
+var linkNameText    = 'Name you new pet link and watch it grow!';
 // const { urlsByFolderID,
 //         allURLs,
 //         allFolders,
@@ -33,12 +34,15 @@ const printFolderList = data => {
 
 const printFolderDetailsList = data => {
   let time = data.created_at.slice(0,10)
-
   let path = `api/v1/shortURL/${data.shortURL}`
   // let path = `${baseRoute}api/v1/shortURL/${data.shortURL}`
+
   $('.folder-contents-display').append(
-    `<li><a href="${path}" class="folder-item">${path}</a>
-    <div class="creation-date">Created On: ${time}</div></li>`
+    `<li>
+    <h3>${data.linkName}</h3>
+    <a href="${path}" class="folder-item">${path}</a>
+    <div class="creation-date">Created On: ${time}</div>
+    </li>`
   )
 }
 
@@ -91,10 +95,10 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting new URL: ', error))
 }
 
-const postNewURL = (id, url) => {
+const postNewURL = (id, url, linkName) => {
   fetch('/api/v1/shortURL/', {
     method: "POST",
-    body: JSON.stringify({folder_id: id, shortURL: url}),
+    body: JSON.stringify({folder_id:id, shortURL:url, linkName:linkName}),
     headers: {"Content-Type": "application/json"}
   })
   .then(resp => resp.json())
@@ -104,15 +108,18 @@ const postNewURL = (id, url) => {
 const makeNewOrAdd = data => {
   const nameArray = []
 
+  // FIND FOLDER BY FOLDER NAME
   $('.folder-item').each((i,val) => {
     if(val.innerText === data.name) {
-      nameArray.push({id:val.id, shortURL: data.url})
+      nameArray.push({id:val.id, shortURL: data.url, linkName: data.linkName})
     }
   })
 
   if(nameArray.length === 1) {
-    postNewURL(nameArray[0].id, nameArray[0].shortURL)
+    postNewURL(nameArray[0].id, nameArray[0].shortURL, nameArray[0].linkName)
   } else {
+
+    // COME BACK FOR THIS AFTER postNewURL IS DONE
     postNewFolderAndURL(data)
   }
 }
@@ -120,12 +127,25 @@ const makeNewOrAdd = data => {
 const clearInputs = () => {
   let folder = $('.new-folder-input').val()
   let url    = $('.new-url-input').val()
+  let name   = $('#url-name').val()
 
-  if ((folder !== newFolderText) && (url !== newUrlText) || folder === 'Select A Folder') {
-    $('.submit-btn').prop('disabled', false)
+  if(folder !== newFolderText) {
+    if(url !== newUrlText) {
+      if(name !== linkNameText) {
+        if(folder === 'Select A Folder') {
+          $('.submit-btn').prop('disabled', false)
+        }
+      }
+    }
   } else {
     $('.submit-btn').prop('disabled', true)
   }
+
+//   if ((folder !== newFolderText) && (url !== newUrlText) && (name !== linkNameText) || (folder === 'Select A Folder') ) {
+//     $('.submit-btn').prop('disabled', false)
+//   } else {
+//     $('.submit-btn').prop('disabled', true)
+//   }
 }
 
 //>--------------------EVENTS--------------------<//
@@ -141,6 +161,20 @@ $('.new-url-input').on('focus', e => {
   clearInputs()
   if (e.target.value === newUrlText) {
     e.target.value = ''
+  }
+})
+
+$('#url-name').on('focus', e => {
+  clearInputs()
+  if (e.target.value === linkNameText) {
+    e.target.value = ''
+  }
+})
+
+$('#url-name').on('blur', e => {
+  clearInputs()
+  if (e.target.value.length === 0) {
+    e.target.value = linkNameText
   }
 })
 
@@ -170,6 +204,7 @@ $('.new-url-input').on('keyup', () => clearInputs())
 
 $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
+  const linkName = $('#url-name').val()
   const folderName = $('.new-folder-input').val()
 
   $('.new-folder-input').val(newFolderText)
@@ -177,6 +212,7 @@ $('.submit-btn').on('click', () => {
 
   clearInputs()
   makeNewOrAdd({
+    linkName: linkName,
     url: url,
     name: folderName
   })
