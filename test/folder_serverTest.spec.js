@@ -7,6 +7,13 @@ const environment    = process.env.NODE_ENV || 'development';
 const configuration  = require('../knexfile')[environment];
 const db             = require('knex')(configuration);
 
+const { urlsByFolderID,
+        allURLs,
+        allFolders,
+        folderByID,
+        redirect,
+        host  } = require('../server/routes.js')
+
 chai.use(chaiHTTP);
 
 describe('Client Routes', () => {
@@ -41,7 +48,7 @@ describe('API Routes', () => {
   describe('GET api/v1/folders', () => {
     it('01: should have certain properties', done => {
       chai.request(server)
-      .get('/api/v1/folders/')
+      .get(allFolders)
       .end((err, res) => {
         res.should.have.status(200)
         res.should.be.json
@@ -59,7 +66,7 @@ describe('API Routes', () => {
   describe('POST api/v1/folders', () => {
     it('01: should be able to post a new url only after receiving an id from POSTing a new folder', done => {
       chai.request(server)
-      .post('/api/v1/folders')
+      .post(allFolders)
       .send({name: 'TestFolder'})
       .end((err, res) => {
         let id = res.body.id
@@ -69,7 +76,7 @@ describe('API Routes', () => {
         res.body.should.be.a('object')
 
         chai.request(server)
-        .post('/api/v1/shortURL')
+        .post(allURLs)
         .send({folder_id:id, shortURL: 'u433nl'})
         .end((err, res) => {
           res.should.have.status(200)

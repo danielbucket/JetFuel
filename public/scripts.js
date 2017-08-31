@@ -1,15 +1,22 @@
-// var baseRoute       = 'http://localhost:3300/api/v1/';
-var baseRoute       = 'https://jetgas.herokuapp.com/';
+var baseRoute       = 'http://localhost:3300/api/v1/';
+// var baseRoute       = 'https://jetgas.herokuapp.com/';
 var findURLsPath    = '/api/v1/shortURL/';
 var findFolderPath  = '/api/v1/folders/';
 var checkfolders    = '/api/v1/checkfolders/';
 
+
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
+// const { urlsByFolderID,
+//         allURLs,
+//         allFolders,
+//         folderByID,
+//         redirect,
+//         host  } = require('./server/routes.js')
 
 //>--------------------FUNCTIONS--------------------<//
 const getFolderByID = id => {
-  fetch(`${findFolderPath}${id}`)
+  fetch(`/api/v1/folders/${id}`)
   .then(resp => resp.json())
   .then(details => {
     fetch(`${findFolderPath}${details.id}/shortURL`)
@@ -27,7 +34,8 @@ const printFolderList = data => {
 const printFolderDetailsList = data => {
   let time = data.created_at.slice(0,10)
 
-  let path = `${findURLsPath}${data.shortURL}`
+  let path = `api/v1/shortURL/${data.shortURL}`
+  // let path = `${baseRoute}api/v1/shortURL/${data.shortURL}`
   $('.folder-contents-display').append(
     `<li><a href="${path}" class="folder-item">${path}</a>
     <div class="creation-date">Created On: ${time}</div></li>`

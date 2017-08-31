@@ -7,6 +7,13 @@ const environment    = process.env.NODE_ENV || 'development';
 const configuration  = require('../knexfile')[environment];
 const db             = require('knex')(configuration);
 
+const { urlsByFolderID,
+        allURLs,
+        allFolders,
+        folderByID,
+        redirect,
+        host  } = require('../server/routes.js')
+
 chai.use(chaiHTTP);
 
 describe('shortURL routes', () => {
@@ -20,7 +27,7 @@ describe('shortURL routes', () => {
   describe('POST api/v1/shortURL', () => {
     it('01_SAD: should not be able to post a new url without a valid id', done => {
       chai.request(server)
-      .post('/api/v1/shortURL')
+      .post(allURLs)
       .send({folder_id: 988433, shortURL: 'b4u8me'})
       .end((err, res) => {
         res.should.have.status(500)
@@ -30,7 +37,7 @@ describe('shortURL routes', () => {
 
     it('02_SAD: should require a specific key value to post a new url', done => {
       chai.request(server)
-      .post('/api/v1/folders')
+      .post(allFolders)
       .send({name: 'Broad Hard Shoulders'})
       .end((err, res) => {
         let id = res.body.id
@@ -39,7 +46,7 @@ describe('shortURL routes', () => {
         res.body.should.have.property('id')
 
         chai.request(server)
-        .post('/api/v1/shortURL')
+        .post(allURLs)
         .send({folder_id: id, shartURL: 'b4u8me'})
         .end((err, res) => {
           res.should.have.status(422)
@@ -51,7 +58,7 @@ describe('shortURL routes', () => {
 
     it('03: should require a valid id to post to the shortURL table', done => {
       chai.request(server)
-      .post('/api/v1/folders')
+      .post(allFolders)
       .send({name: 'deadGuyDuties'})
       .end((err, res) => {
         res.should.have.status(200)
@@ -61,7 +68,7 @@ describe('shortURL routes', () => {
         let id = res.body.id
 
         chai.request(server)
-        .post('/api/v1/shortURL')
+        .post(allURLs)
         .send({folder_id:id, shortURL:'53778008'})
         .end((err, res) => {
           res.should.have.status(200)
@@ -73,7 +80,7 @@ describe('shortURL routes', () => {
 
     it('04: should be able to find the folder by its unique id', done => {
       chai.request(server)
-      .post('/api/v1/folders')
+      .post(allFolders)
       .send({name: 'I wanna talk to Sampson!'})
       .end((err, res) => {
         res.should.have.status(200)
@@ -87,7 +94,7 @@ describe('shortURL routes', () => {
   describe('GET /api/v1/shortURL', () => {
     it('01: should return the following values: ', done => {
       chai.request(server)
-      .get('/api/v1/shortURL')
+      .get(allURLs)
       .end((err, response) => {
         response.should.have.status(200)
         response.should.be.json
@@ -107,7 +114,7 @@ describe('shortURL routes', () => {
   // HOW DO I TEST A REDIRECT??
   xit('04: should respond with a redirect when server is hit', done => {
     chai.request(server)
-    .post('/api/v1/folders')
+    .post(allFolders)
     .send({name: 'I wanna talk to Sampson!'})
     .end((err, res) => {
       res.should.have.status(200)
@@ -117,7 +124,7 @@ describe('shortURL routes', () => {
       let id = res.body.id
 
       chai.request(server)
-      .post('/api/v1/shortURL')
+      .post(allURLs)
       .send({folder_id:id, shortURL:'tootsieRoll'})
       .end((err, res) => {
         res.should.have.status(200)
@@ -127,7 +134,7 @@ describe('shortURL routes', () => {
         let short = res.body.shortURL
 
         chai.request(server)
-        .get(`/api/v1/shortURL/${short}`)
+        .get(`${allURLs}${short}`)
         .end((err, res) => {
         })
       })
@@ -136,16 +143,10 @@ describe('shortURL routes', () => {
 
   it('should get all urls linked to the specified folder', done => {
     chai.request(server)
-    .post('/api/v1/folders/')
+    .post(allFolders)
     .send({name:'HoldMyBeer'})
-    .end((err, res) => {
-      res.should.have.status(200)
-      res.should.be.json
-      res.body.should.have.property('id')
-      let id = res.body.id
-
       chai.request(server)
-      .post('/api/v1/folders')
+      .post(allFolders)
       .send({name:'WhosYourDaddy'})
       .end((err, res) => {
         res.should.have.status(200)
@@ -155,7 +156,7 @@ describe('shortURL routes', () => {
         let id = res.body.id
 
         chai.request(server)
-        .post('/api/v1/shortURL')
+        .post(allURLs)
         .send({'folder_id':id, shortURL:'flabmaster'})
         .end((err, res) => {
           res.should.have.status(200)
@@ -165,7 +166,7 @@ describe('shortURL routes', () => {
           let id = res.body.folder_id
 
           chai.request(server)
-          .get(`/api/v1/folders/${id}/shortURL`)
+          .get(`${allFolders}${id}/shortURL`)
           .end((err, res) => {
             res.body.should.have.property('urlData')
             res.body.urlData.length.should.equal(1)
@@ -175,6 +176,6 @@ describe('shortURL routes', () => {
           })
         })
       })
-    })
+
   })
 })
