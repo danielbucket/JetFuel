@@ -129,7 +129,6 @@ describe('shortURL routes', () => {
         chai.request(server)
         .get(`/api/v1/shortURL/${short}`)
         .end((err, res) => {
-          console.log(res.body)
         })
       })
     })
