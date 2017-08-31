@@ -28,7 +28,7 @@ app.get('/api/v1/folders/', (request, response) => {
   .catch(error => response.status(500).json({ error }))
 })
 
-
+// NOT IN USE
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
 
@@ -44,7 +44,7 @@ app.get('/api/v1/checkfolders/:folderName', (request, response) => {
 })
 
 
-// GET ALL EXSTING URLS FROM THE SERVER
+// GET ALL EXSTING URLS FROM THE SERVER --TESTED
 app.get('/api/v1/shortURL', (request, response) => {
 
   db('urls').select()
@@ -57,8 +57,8 @@ app.get('/api/v1/shortURL', (request, response) => {
 app.get('/api/v1/shortURL/:shorturl', (request, response) => {
 
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
-    .then(data => response.redirect('http://' + data[0].longURL))
-    .catch(error => response.status(500).json({ error }))
+  .then(data => response.redirect('http://' + data[0].longURL))
+  .catch(error => response.status(500).json({ error }))
 })
 
 
@@ -97,7 +97,7 @@ app.post('/api/v1/shortURL', (request, response) => {
       })
     }
   }
-  
+
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
@@ -106,8 +106,8 @@ app.post('/api/v1/shortURL', (request, response) => {
 
 
   db('urls').insert(newShortURL, "*")
-    .then(data => response.status(200).json( data[0] ))
-    .catch(error => response.status(500).json({ error }))
+  .then(data => response.status(200).json( data[0] ))
+  .catch(error => response.status(500).json({ error }))
 })
 
 
@@ -115,8 +115,8 @@ app.post('/api/v1/shortURL', (request, response) => {
 app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 
   db('urls').where('folder_id', request.params.id).select()
-    .then(urlData => response.status(200).json({ urlData }))
-    .catch(error => response.status(500).json({ error }))
+  .then(urlData => response.status(200).json({ urlData }))
+  .catch(error => response.status(500).json({ error }))
 })
 
 app.listen(app.get('port'), () => {
