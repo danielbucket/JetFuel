@@ -136,18 +136,16 @@ describe('shortURL routes', () => {
         chai.request(server)
         .get(`${allURLs}${short}`)
         .end((err, res) => {
+          // WHAT DO I DO NOW?
         })
       })
     })
   })
 
   it('should get all urls linked to the specified folder', done => {
-    chai.request(server)
-    .post(allFolders)
-    .send({name:'HoldMyBeer'})
       chai.request(server)
       .post(allFolders)
-      .send({name:'WhosYourDaddy'})
+      .send({name:'HoldMyBeer'})
       .end((err, res) => {
         res.should.have.status(200)
         res.should.be.json
@@ -176,6 +174,5 @@ describe('shortURL routes', () => {
           })
         })
       })
-
   })
 })
