@@ -7,6 +7,7 @@ var checkfolders    = '/api/v1/checkfolders/';
 
 var newFolderText   = 'Make a new folder';
 var newUrlText      = 'Enter a new URL';
+
 // const { urlsByFolderID,
 //         allURLs,
 //         allFolders,
@@ -73,15 +74,13 @@ const postNewFolderAndURL = data => {
   fetch('/api/v1/folders/', {
     method: "POST",
     body: JSON.stringify({ name: data.name }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+    headers: { "Content-Type": "application/json" }
   })
   .then(resp => resp.json())
   .then(folderID => {
     fetch(findURLsPath, {
       method: "POST",
-      body: JSON.stringify({folder_id: folderID.id, shortURL: data.url}),
+      body: JSON.stringify({ folder_id:folderID.id, shortURL:data.url }),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
@@ -94,14 +93,15 @@ const postNewFolderAndURL = data => {
 const postNewURL = (id, url) => {
   fetch('/api/v1/shortURL/', {
     method: "POST",
-    body: JSON.stringify({folder_id: id, shortURL: url}),
-    headers: {"Content-Type": "application/json"}
+    body: JSON.stringify({ folder_id:id, shortURL:url }),
+    headers: { "Content-Type": "application/json" }
   })
   .then(resp => resp.json())
   .then(data => getFolderByID(data.folder_id))
 }
 
 const makeNewOrAdd = data => {
+  console.log(data)
   const nameArray = []
 
   $('.folder-item').each((i,val) => {
@@ -125,6 +125,20 @@ const clearInputs = () => {
     $('.submit-btn').prop('disabled', false)
   } else {
     $('.submit-btn').prop('disabled', true)
+  }
+}
+
+const isUrlValid = (userURL, folder) => {
+  var regexQuery = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+  var url = new RegExp(regexQuery,"i")
+
+  if (url.test(userURL)) {
+    makeNewOrAdd({ url:userURL, name:folder })
+    clearInputs()
+    return true
+  } else {
+    alert(`Invalid url, dude!: ${userURL}`)
+    return false
   }
 }
 
@@ -170,16 +184,13 @@ $('.new-url-input').on('keyup', () => clearInputs())
 
 $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
-  const folderName = $('.new-folder-input').val()
+  const folder = $('.new-folder-input').val()
+
+  isUrlValid(url, folder)
 
   $('.new-folder-input').val(newFolderText)
   $('.new-url-input').val(newUrlText)
 
-  clearInputs()
-  makeNewOrAdd({
-    url: url,
-    name: folderName
-  })
 })
 
 $(document).ready(() => {
