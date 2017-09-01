@@ -24,10 +24,8 @@ app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
-
 // GET ALL EXISTING FOLDERS FROM THE SERVER // **
 app.get(allFolders, (request, response) => {
-
   db('folders').select()
   .then(data => response.status(200).json({ data }))
   .catch(error => response.status(500).json({ error }))
@@ -36,7 +34,6 @@ app.get(allFolders, (request, response) => {
 // NOT IN USE
 // RETURN POSTED FOLDER ONLY IF IT IS NOT A DUPLICATE
 app.get('/api/v1/checkfolders/:folderName', (request, response) => {
-
   db('folders').where('name', request.params.folderName).select()
   .then(folders => {
     if (folders.length === 0) {
@@ -48,33 +45,26 @@ app.get('/api/v1/checkfolders/:folderName', (request, response) => {
   .catch(error => response.status(302).json({ error }))
 })
 
-
 // GET ALL EXSTING URLS FROM THE SERVER --TESTED // **
 app.get(allURLs, (request, response) => {
-
   db('urls').select()
     .then(data => response.status(200).json({ data }))
     .catch(error => response.status(500).json({ error }))
 })
 
-
 // GET AN EXISTING URL THAT REDIRECTS // **
 app.get(redirectToLongURL, (request, response) => {
-
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
   .then(data => response.redirect('http://' + data[0].longURL))
   .catch(error => response.status(500).json({ error }))
 })
 
-
 // GET A FOLDER SPECIFIED BY THE FOLDER ID // **
 app.get('/api/v1/folders/:id', (request, response) => {
-
   db('folders').where('id', request.params.id).select()
     .then(folder => response.status(200).json( folder[0] ))
     .catch(error => response.status(500).json({ error }))
 })
-
 
 // POST A NEW FOLDER // **
 app.post(allFolders, (request, response) => {
@@ -91,10 +81,8 @@ app.post(allFolders, (request, response) => {
     .catch(error => response.status(500).json({ error }))
 })
 
-
 // POST A NEW shortURL // **
 app.post(allURLs, (request, response) => {
-
   for (let requireParameter of ['shortURL']) {
     if (!request.body[requireParameter]) {
       return response.status(422).json({
@@ -109,12 +97,10 @@ app.post(allURLs, (request, response) => {
     longURL: request.body.shortURL
    }
 
-
   db('urls').insert(newShortURL, "*")
   .then(data => response.status(200).json( data[0] ))
   .catch(error => response.status(500).json({ error }))
 })
-
 
 // GET ALL URLS LINKED TO A SPECIFIC FOLDER // **
 app.get(urlsByFolderID, (request, response) => {

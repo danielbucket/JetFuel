@@ -47,7 +47,9 @@ const printFolderDetails = url => {
   const sorted = url.sort((a,b) => {
     return a.created_at > b.created_at
   })
+
   $('.folder-contents-display').empty()
+
   for (let i = 0; i < sorted.length; i++) {
     printFolderDetailsList(sorted[i])
   }
@@ -58,6 +60,7 @@ const printAllFolders = folder => {
   $('.dropdown-content').append(
     `<option class="folder-item" selected="selected">Select A Folder</option>`
   )
+
   for (let i = 0; i < folder.data.length; i++) {
     printFolderList(folder.data[i])
   }
@@ -85,9 +88,9 @@ const postNewFolderAndURL = data => {
     })
     .then(resp => resp.json())
     .then(data => fetchAllFolders())
-    .catch(error => console.log('error posting new url', error))
+    .catch(error => console.log('error posting to "shortURL": ', error))
   })
-  .catch(error => console.log('error posting new URL: ', error))
+  .catch(error => console.log('error posting to "folders": ', error))
 }
 
 const postNewURL = (id, url) => {
@@ -98,15 +101,15 @@ const postNewURL = (id, url) => {
   })
   .then(resp => resp.json())
   .then(data => getFolderByID(data.folder_id))
+  .catch(err => console.log('error posting to shortURL at postNewURL()'))
 }
 
 const makeNewOrAdd = data => {
-  console.log(data)
   const nameArray = []
 
   $('.folder-item').each((i,val) => {
     if(val.innerText === data.name) {
-      nameArray.push({id:val.id, shortURL: data.url})
+      nameArray.push({ id:val.id, shortURL:data.url })
     }
   })
 
@@ -186,7 +189,10 @@ $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
   const folder = $('.new-folder-input').val()
 
-  isUrlValid(url, folder)
+  if (isUrlValid(url, folder)) {
+    // WHAT CAN I DO WHEN isUrlValid RETURNS TRUE OR FALSE?
+    alert('great success')
+  }
 
   $('.new-folder-input').val(newFolderText)
   $('.new-url-input').val(newUrlText)
