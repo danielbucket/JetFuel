@@ -1,7 +1,7 @@
-var baseRoute       = 'http://localhost:3300/api/v1/';
-var findURLsPath    = '/api/v1/shortURL/';
-var findFolderPath  = '/api/v1/folders/';
-var checkfolders    = '/api/v1/checkfolders/';
+// var baseRoute       = 'http://localhost:3300/api/v1/';
+// var findURLsPath    = '/api/v1/shortURL/';
+// var findFolderPath  = '/api/v1/folders/';
+// var checkfolders    = '/api/v1/checkfolders/';
 
 
 var newFolderText   = 'Make a new folder';
@@ -13,7 +13,7 @@ const getFolderByID = id => {
   fetch(`/api/v1/folders/${id}`)
   .then(resp => resp.json())
   .then(details => {
-    fetch(`${findFolderPath}${details.id}/shortURL`)
+    fetch(`'/api/v1/folders/${details.id}/shortURL`)
     .then(resp => resp.json())
     .then(urlResponse => printFolderDetails(urlResponse.urlData))
   })
@@ -73,7 +73,7 @@ const postNewFolderAndURL = data => {
   })
   .then(resp => resp.json())
   .then(folderID => {
-    fetch(findURLsPath, {
+    fetch('/api/v1/folders/', {
       method: "POST",
       body: JSON.stringify({ folder_id:folderID.id, shortURL:data.url }),
       headers: {"Content-Type": "application/json"}

@@ -69,7 +69,7 @@ describe('API Routes', () => {
         res.body.should.be.a('object')
 
         chai.request(server)
-        .post(allURLs)
+        .post('/api/v1/shortURL/')
         .send({folder_id:id, shortURL: 'u433nl'})
         .end((err, res) => {
           res.should.have.status(200)
