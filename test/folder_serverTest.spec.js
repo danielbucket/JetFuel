@@ -65,9 +65,10 @@ describe('API Routes', () => {
 
   describe('POST api/v1/folders', () => {
     it('01: should be able to post a new url only after receiving an id from POSTing a new folder', done => {
+      console.log(allFolders)
       chai.request(server)
       .post(allFolders)
-      .send({name: 'TestFolder'})
+      .send( {name: 'TestFolder'} )
       .end((err, res) => {
         let id = res.body.id
 

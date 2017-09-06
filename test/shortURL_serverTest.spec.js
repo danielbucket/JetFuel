@@ -28,7 +28,7 @@ describe('shortURL routes', () => {
     it('01_SAD: should not be able to post a new url without a valid id', done => {
       chai.request(server)
       .post(allURLs)
-      .send({folder_id: 988433, shortURL: 'b4u8me'})
+      .send({ folder_id:988433, shortURL:'b4u8me'} )
       .end((err, res) => {
         res.should.have.status(500)
         done()
@@ -38,7 +38,7 @@ describe('shortURL routes', () => {
     it('02_SAD: should require a specific key value to post a new url', done => {
       chai.request(server)
       .post(allFolders)
-      .send({name: 'Broad Hard Shoulders'})
+      .send({ name:'Broad Hard Shoulders' })
       .end((err, res) => {
         let id = res.body.id
 
