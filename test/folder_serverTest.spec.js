@@ -48,7 +48,7 @@ describe('API Routes', () => {
   describe('GET api/v1/folders', () => {
     it('01: should have certain properties', done => {
       chai.request(server)
-      .get(allFolders)
+      .get('/api/v1/folders/')
       .end((err, res) => {
         res.should.have.status(200)
         res.should.be.json
@@ -65,9 +65,8 @@ describe('API Routes', () => {
 
   describe('POST api/v1/folders', () => {
     it('01: should be able to post a new url only after receiving an id from POSTing a new folder', done => {
-      console.log(allFolders)
       chai.request(server)
-      .post(allFolders)
+      .post('/api/v1/folders/')
       .send( {name: 'TestFolder'} )
       .end((err, res) => {
         let id = res.body.id
