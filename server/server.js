@@ -1,13 +1,9 @@
-const   express     = require('express');
-const   app         = express();
-const   bodyParser  = require('body-parser');
-const   path        = require('path');
-const   shortHash   = require('short-hash');
-const { urlsByFolderID,
-        allURLs,
-        allFolders,
-        getFolderByID,
-        redirectToLongURL } = require('./routes.js');
+const   express = require('express');
+const   app = express();
+const   bodyParser = require('body-parser');
+const   path = require('path');
+const   shortHash = require('short-hash');
+
 
 // DATABASE CONFIGURATION
 const environment = process.env.NODE_ENV || 'development'
@@ -25,7 +21,7 @@ app.get('/', (request, response) => {
 })
 
 // GET ALL EXISTING FOLDERS FROM THE SERVER // **
-app.get(allFolders, (request, response) => {
+app.get('/api/v1/folders/', (request, response) => {
   db('folders').select()
   .then(data => response.status(200).json({ data }))
   .catch(error => response.status(500).json({ error }))
@@ -46,14 +42,14 @@ app.get('/api/v1/checkfolders/:folderName', (request, response) => {
 })
 
 // GET ALL EXSTING URLS FROM THE SERVER --TESTED // **
-app.get(allURLs, (request, response) => {
+app.get('/api/v1/shortURL/', (request, response) => {
   db('urls').select()
     .then(data => response.status(200).json({ data }))
     .catch(error => response.status(500).json({ error }))
 })
 
 // GET AN EXISTING URL THAT REDIRECTS // **
-app.get(redirectToLongURL, (request, response) => {
+app.get('/api/v1/shortURL/:shorturl', (request, response) => {
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
   .then(data => response.redirect('http://' + data[0].longURL))
   .catch(error => response.status(500).json({ error }))
@@ -62,12 +58,12 @@ app.get(redirectToLongURL, (request, response) => {
 // GET A FOLDER SPECIFIED BY THE FOLDER ID // **
 app.get('/api/v1/folders/:id', (request, response) => {
   db('folders').where('id', request.params.id).select()
-    .then(folder => response.status(200).json( folder[0] ))
-    .catch(error => response.status(500).json({ error }))
+  .then(folder => response.status(200).json( folder[0] ))
+  .catch(error => response.status(500).json({ error }))
 })
 
 // POST A NEW FOLDER // **
-app.post(allFolders, (request, response) => {
+app.post('/api/v1/folders/', (request, response) => {
   for (let requireParameter of ['name']) {
     if (!request.body[requireParameter]) {
       return response.status(422).json({
@@ -77,12 +73,12 @@ app.post(allFolders, (request, response) => {
   }
 
   db('folders').insert(request.body, 'id')
-    .then(data => response.status(200).json({ id: data[0] }))
-    .catch(error => response.status(500).json({ error }))
+  .then(data => response.status(200).json({ id: data[0] }))
+  .catch(error => response.status(500).json({ error }))
 })
 
 // POST A NEW shortURL // **
-app.post(allURLs, (request, response) => {
+app.post('/api/v1/shortURL', (request, response) => {
   for (let requireParameter of ['shortURL']) {
     if (!request.body[requireParameter]) {
       return response.status(422).json({
@@ -103,7 +99,7 @@ app.post(allURLs, (request, response) => {
 })
 
 // GET ALL URLS LINKED TO A SPECIFIC FOLDER // **
-app.get(urlsByFolderID, (request, response) => {
+app.get('/api/v1/folders/:id/shortURL', (request, response) => {
 
   db('urls').where('folder_id', request.params.id).select()
   .then(urlData => response.status(200).json({ urlData }))

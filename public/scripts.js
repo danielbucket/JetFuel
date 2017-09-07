@@ -1,11 +1,5 @@
-// var baseRoute       = 'http://localhost:3300/api/v1/';
-// var findURLsPath    = '/api/v1/shortURL/';
-// var findFolderPath  = '/api/v1/folders/';
-// var checkfolders    = '/api/v1/checkfolders/';
-
-
-var newFolderText   = 'Make a new folder';
-var newUrlText      = 'Enter a new URL';
+var newFolderText = 'Make a new folder';
+var newUrlText = 'Enter a new URL';
 
 
 //>--------------------FUNCTIONS--------------------<//
@@ -17,7 +11,7 @@ const getFolderByID = id => {
     .then(resp => resp.json())
     .then(urlResponse => printFolderDetails(urlResponse.urlData))
   })
-  .catch(error => console.log('error fetching folder details: ', error))
+  .catch(error => console.log('ERROR: GET folders @ getFolderByID: ', error))
 }
 
 const printFolderList = data => {
@@ -59,13 +53,10 @@ const printAllFolders = folder => {
 }
 
 const fetchAllFolders = () => {
-  fetch('api/v1/folders')
-  .then(resp => {
-    console.log('response: ', resp)
-    resp.json()
-  })
+  fetch('/api/v1/folders/')
+  .then(resp => resp.json())
   .then(data => printAllFolders(data))
-  .catch(error => console.log('error fetching all folders: ', error))
+  .catch(error => console.log('ERROR: GET folders @ fetchAllFolders: ', error))
 }
 
 const postNewFolderAndURL = data => {
@@ -76,14 +67,14 @@ const postNewFolderAndURL = data => {
   })
   .then(resp => resp.json())
   .then(folderID => {
-    fetch('/api/v1/folders/', {
+    fetch('/api/v1/shortURL/', {
       method: "POST",
       body: JSON.stringify({ folder_id:folderID.id, shortURL:data.url }),
       headers: {"Content-Type": "application/json"}
     })
     .then(resp => resp.json())
     .then(data => fetchAllFolders())
-    .catch(error => console.log('error posting to "shortURL": ', error))
+    .catch(error => console.log('ERROR: POST shortURL @ postNewFolderAndURL :', error))
   })
   .catch(error => console.log('error posting to "folders": ', error))
 }
@@ -96,7 +87,18 @@ const postNewURL = (id, url) => {
   })
   .then(resp => resp.json())
   .then(data => getFolderByID(data.folder_id))
-  .catch(err => console.log('error posting to shortURL at postNewURL()'))
+  .catch(err => console.log('ERROR: POST shortURL @ postNewURL: ', err))
+}
+
+const activateSubmitBtn = () => {
+  let folder = $('.new-folder-input').val()
+  let url = $('.new-url-input').val()
+
+  if ((folder !== newFolderText) && (url !== newUrlText) || folder === 'Select A Folder') {
+    $('.submit-btn').prop('disabled', false)
+  } else {
+    $('.submit-btn').prop('disabled', true)
+  }
 }
 
 const makeNewOrAdd = data => {
@@ -115,27 +117,15 @@ const makeNewOrAdd = data => {
   }
 }
 
-const clearInputs = () => {
-  let folder = $('.new-folder-input').val()
-  let url    = $('.new-url-input').val()
-
-  if ((folder !== newFolderText) && (url !== newUrlText) || folder === 'Select A Folder') {
-    $('.submit-btn').prop('disabled', false)
-  } else {
-    $('.submit-btn').prop('disabled', true)
-  }
-}
-
 const isUrlValid = (userURL, folder) => {
   var regexQuery = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
   var url = new RegExp(regexQuery,"i")
 
   if (url.test(userURL)) {
     makeNewOrAdd({ url:userURL, name:folder })
-    clearInputs()
+    activateSubmitBtn(true)
   } else {
-    alert(`Invalid url, dude!: ${userURL}`)
-    return false
+    alert(`Invalid url, dude! "${userURL}" is not a valid url`)
   }
 }
 
@@ -144,40 +134,40 @@ $('.dropdown-content').change(() => {
   const selected = $('.dropdown-content option:selected')
 
   $('.new-folder-input').val(selected[0].innerText)
-  clearInputs()
+  activateSubmitBtn()
   getFolderByID(selected[0].id)
 })
 
 $('.new-url-input').on('focus', e => {
-  clearInputs()
+  activateSubmitBtn()
   if (e.target.value === newUrlText) {
     e.target.value = ''
   }
 })
 
 $('.new-url-input').on('blur', e => {
-  clearInputs()
+  activateSubmitBtn()
   if (e.target.value.length === 0) {
     e.target.value = newUrlText
   }
 })
 
 $('.new-folder-input').on('focus', e => {
-  clearInputs()
+  activateSubmitBtn()
   if (e.target.value === newFolderText) {
     e.target.value = ''
   }
 })
 
 $('.new-folder-input').on('blur', e => {
-  clearInputs()
+  activateSubmitBtn()
   if (e.target.value.length === 0) {
     e.target.value = newFolderText
   }
 })
 
-$('.new-folder-input').on('keyup', () => clearInputs())
-$('.new-url-input').on('keyup', () => clearInputs())
+$('.new-folder-input').on('keyup', () => activateSubmitBtn())
+$('.new-url-input').on('keyup', () => activateSubmitBtn())
 
 $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
