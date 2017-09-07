@@ -13,7 +13,7 @@ const getFolderByID = id => {
   fetch(`/api/v1/folders/${id}`)
   .then(resp => resp.json())
   .then(details => {
-    fetch(`'/api/v1/folders/${details.id}/shortURL`)
+    fetch(`/api/v1/folders/${details.id}/shortURL`)
     .then(resp => resp.json())
     .then(urlResponse => printFolderDetails(urlResponse.urlData))
   })
@@ -60,7 +60,10 @@ const printAllFolders = folder => {
 
 const fetchAllFolders = () => {
   fetch('api/v1/folders')
-  .then(resp => resp.json())
+  .then(resp => {
+    console.log('response: ', resp)
+    resp.json()
+  })
   .then(data => printAllFolders(data))
   .catch(error => console.log('error fetching all folders: ', error))
 }
@@ -130,7 +133,6 @@ const isUrlValid = (userURL, folder) => {
   if (url.test(userURL)) {
     makeNewOrAdd({ url:userURL, name:folder })
     clearInputs()
-    return true
   } else {
     alert(`Invalid url, dude!: ${userURL}`)
     return false
@@ -181,14 +183,7 @@ $('.submit-btn').on('click', () => {
   const url = $('.new-url-input').val()
   const folder = $('.new-folder-input').val()
 
-  if (isUrlValid(url, folder)) {
-    // WHAT CAN I DO WHEN isUrlValid RETURNS TRUE OR FALSE?
-    alert('great success')
-  }
-
-  $('.new-folder-input').val(newFolderText)
-  $('.new-url-input').val(newUrlText)
-
+  isUrlValid(url, folder)
 })
 
 $(document).ready(() => {
