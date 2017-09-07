@@ -30,7 +30,6 @@ const printFolderDetailsList = data => {
 }
 
 const printFolderDetails = url => {
-  console.log(url)
   const sorted = url.sort((a,b) => {
     return a.created_at > b.created_at
   })

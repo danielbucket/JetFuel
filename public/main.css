@@ -52,32 +52,28 @@ header {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: center;
+  background-color: #a4e2b5;
+  height: 100%;
 }
 
 .form-field {
   display: block;
 }
 
-.form, .input, .submit-btn, .dropdown-content {
-  width: 100%;
+.input, .submit-btn, .dropdown-content, .submit-btn {
   height: 30px;
-
+  width: 100%;
+  border: 2px solid #b6c4c7;
+  border-radius: 4px;
 }
 
-.input {
-  border-right: 3px solid #a4e2b5;
-  border-left: 3px solid #a4e2b5;
-  border-top: 1px solid #b6c4c7;
+.submit-btn:hover {
+  border: 3px solid #fff;
 }
 
 .submit-btn {
-  height: 50px;
-  margin-top: 10px;
-  background-color: transparent;
-  margin: 0;
-  border: 3px solid #a4e2b5;
-  border-radius: 0 0 10px 10px;
+  background-color: #fff;
+  margin: 67px 0;
 }
 
 .submit-btn-txt {
@@ -85,9 +81,13 @@ header {
   letter-spacing: 1px;
 }
 
-.new-url-display {
-  border: 1px solid red;
-  margin-top: 400px;
+.submit-btn-txt:hover {
+  font-size: 16px;
+  letter-spacing: 3px;
+}
+
+.active-submit-btn {
+  color: green;
 }
 
 .existing-folders-box {
@@ -105,8 +105,4 @@ header {
 .folder-item {
   text-decoration: none;
   color: black;
-}
-
-.creation-date {
-
 }
