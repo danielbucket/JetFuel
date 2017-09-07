@@ -30,6 +30,7 @@ const printFolderDetailsList = data => {
 }
 
 const printFolderDetails = url => {
+  console.log(url)
   const sorted = url.sort((a,b) => {
     return a.created_at > b.created_at
   })
@@ -62,7 +63,7 @@ const fetchAllFolders = () => {
 const postNewFolderAndURL = data => {
   fetch('/api/v1/folders/', {
     method: "POST",
-    body: JSON.stringify({ name: data.name }),
+    body: JSON.stringify({ name:data.name }),
     headers: { "Content-Type": "application/json" }
   })
   .then(resp => resp.json())
@@ -70,7 +71,7 @@ const postNewFolderAndURL = data => {
     fetch('/api/v1/shortURL/', {
       method: "POST",
       body: JSON.stringify({ folder_id:folderID.id, shortURL:data.url }),
-      headers: {"Content-Type": "application/json"}
+      headers: {"Content-Type":"application/json"}
     })
     .then(resp => resp.json())
     .then(data => fetchAllFolders())
@@ -123,7 +124,8 @@ const isUrlValid = (userURL, folder) => {
 
   if (url.test(userURL)) {
     makeNewOrAdd({ url:userURL, name:folder })
-    activateSubmitBtn(true)
+    $('.new-folder-input')[0].value = newFolderText
+    $('.new-url-input')[0].value = newUrlText
   } else {
     alert(`Invalid url, dude! "${userURL}" is not a valid url`)
   }
