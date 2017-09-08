@@ -14,8 +14,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "knex": "^0.13.0",
-    "nodemon": "^1.11.0",
-    "pg": "^7.1.2",
+    "nodemon": "^1.12.0",
+    "pg": "^7.3.0",
     "short-hash": "^1.0.0"
   },
   "devDependencies": {

@@ -22,6 +22,7 @@ app.get('/', (request, response) => {
 
 // GET ALL EXISTING FOLDERS FROM THE SERVER // **
 app.get('/api/v1/folders/', (request, response) => {
+  console.log('hit')
   db('folders').select()
   .then(data => response.status(200).json({ data }))
   .catch(error => response.status(500).json({ error }))

@@ -49,11 +49,16 @@ header {
 }
 
 .sub-standard-box {
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   background-color: #a4e2b5;
   height: 100%;
+}
+
+.instruction {
+  margin-left: 4px;
 }
 
 .form-field {

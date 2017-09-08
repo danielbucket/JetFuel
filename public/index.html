@@ -14,9 +14,9 @@
     <section class="standard-box-size">
       <div class="sub-standard-box">
         <div class="folder-input-box">
-            <h3>Create a new folder here</h3>
-            <input class="input" type="text" name="existing folders" value="Make a new folder">
-            <h3>Or, choose an existing folder</h3>
+            <h3 class="instruction">Create a new folder here</h3>
+            <input id="new-folder-input" class="input" type="text" name="existing folders" value="Make a new folder">
+            <h3 class="instruction">Or, choose an existing folder</h3>
             <select class="dropdown-content">
               <option value="select a folder" selected="selected">Select a folder</option>
             </select>
@@ -26,8 +26,8 @@
     <section class="standard-box-size">
       <div class="sub-standard-box">
         <div class="form" action="index.html" method="post">
-          <h3>Enter a URL</h3>
-          <input id="long-url" class="input" type="url" name="new url" value="Enter a new URL">
+          <h3 class="instruction">Enter a URL</h3>
+          <input id="new-url-input" class="input" type="url" name="new url" value="Enter a new URL">
         </div>
           <button class="submit-btn" type="button" name="button" disabled>
             <div class="submit-btn-txt">SUBMIT</div>
@@ -37,7 +37,7 @@
     </section>
     <section class="standard-box-size">
       <div class="sub-standard-box">
-      <h3 class="folders-instruction">Folder Contents</h3>
+      <h3 class="instruction">Folder Contents</h3>
         <ol class="folder-contents-display"></ol>
       </div>
     </section>

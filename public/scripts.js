@@ -112,6 +112,7 @@ const makeNewOrAdd = data => {
 
   if(nameArray.length === 1) {
     postNewURL(nameArray[0].id, nameArray[0].shortURL)
+    printFolderDetails(nameArray[0].id)
   } else {
     postNewFolderAndURL(data)
   }
@@ -121,12 +122,12 @@ const isUrlValid = (userURL, folder) => {
   var regexQuery = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
   var url = new RegExp(regexQuery,"i")
 
-  if (url.test(userURL)) {
+  if(url.test(userURL)) {
     makeNewOrAdd({ url:userURL, name:folder })
-    $('.new-folder-input')[0].value = newFolderText
-    $('.new-url-input')[0].value = newUrlText
+    $('#new-folder-input')[0].value = newFolderText
+    $('#new-url-input')[0].value = newUrlText
   } else {
-    alert(`Invalid url, dude! "${userURL}" is not a valid url`)
+    alert(`Invalid url, dude! "${userURL}" is not an invalid url, dude.`)
   }
 }
 
@@ -134,45 +135,45 @@ const isUrlValid = (userURL, folder) => {
 $('.dropdown-content').change(() => {
   const selected = $('.dropdown-content option:selected')
 
-  $('.new-folder-input').val(selected[0].innerText)
+  $('#new-folder-input').val(selected[0].innerText)
   activateSubmitBtn()
   getFolderByID(selected[0].id)
 })
 
-$('.new-url-input').on('focus', e => {
+$('#new-url-input').on('focus', e => {
   activateSubmitBtn()
   if (e.target.value === newUrlText) {
-    e.target.value = ''
+    e.target.value = ""
   }
 })
 
-$('.new-url-input').on('blur', e => {
+$('#new-url-input').on('blur', e => {
   activateSubmitBtn()
   if (e.target.value.length === 0) {
     e.target.value = newUrlText
   }
 })
 
-$('.new-folder-input').on('focus', e => {
+$('#new-folder-input').on('focus', e => {
   activateSubmitBtn()
   if (e.target.value === newFolderText) {
-    e.target.value = ''
+    e.target.value = ""
   }
 })
 
-$('.new-folder-input').on('blur', e => {
+$('#new-folder-input').on('blur', e => {
   activateSubmitBtn()
   if (e.target.value.length === 0) {
     e.target.value = newFolderText
   }
 })
 
-$('.new-folder-input').on('keyup', () => activateSubmitBtn())
-$('.new-url-input').on('keyup', () => activateSubmitBtn())
+$('#new-folder-input').on('keyup', () => activateSubmitBtn())
+$('#new-url-input').on('keyup', () => activateSubmitBtn())
 
 $('.submit-btn').on('click', () => {
-  const url = $('.new-url-input').val()
-  const folder = $('.new-folder-input').val()
+  const url = $('#new-url-input').val()
+  const folder = $('#new-folder-input').val()
 
   isUrlValid(url, folder)
 })
