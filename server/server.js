@@ -52,7 +52,7 @@ app.get('/api/v1/shortURL/', (request, response) => {
 // GET AN EXISTING URL THAT REDIRECTS // **
 app.get('/api/v1/shortURL/:shorturl', (request, response) => {
   db('urls').where('shortURL', request.params.shorturl).select('longURL')
-  .then(data => response.redirect('http://' + data[0].longURL))
+  .then(data => response.redirect(data[0].longURL))
   .catch(error => response.status(500).json({ error }))
 })
 
