@@ -9,7 +9,9 @@ const getFolderByID = id => {
   .then(details => {
     fetch(`/api/v1/folders/${details.id}/shortURL`)
     .then(resp => resp.json())
-    .then(urlResponse => printFolderDetails(urlResponse.urlData))
+    .then(urlResponse => {
+      printFolderDetails(urlResponse.urlData)
+    })
   })
   .catch(error => console.log('ERROR: GET folders @ getFolderByID: ', error))
 }
@@ -112,7 +114,7 @@ const makeNewOrAdd = data => {
 
   if(nameArray.length === 1) {
     postNewURL(nameArray[0].id, nameArray[0].shortURL)
-    printFolderDetails(nameArray[0].id)
+    printFolderDetails([nameArray[0].id])
   } else {
     postNewFolderAndURL(data)
   }

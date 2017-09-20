@@ -43,6 +43,7 @@ const createFolder = (knex, folder) => {
           id: url.id,
           longURL: url.longURL,
           shortURL: url.shortURL,
+          url_name: url.url_name,
           folder_id: folderID[0]
         })
       )
