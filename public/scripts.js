@@ -14,7 +14,7 @@ const getFolderByID = id => {
   .catch(error => console.log('ERROR: GET folders @ getFolderByID: ', error))
 }
 
-const printFolderList = data => {
+const mapFolderName = data => {
   $('.dropdown-content').append(
     `<option class="folder-item" id=${data.id}>${data.name}</option>`
 )}
@@ -48,7 +48,7 @@ const printAllFolders = folder => {
   )
 
   for (let i = 0; i < folder.data.length; i++) {
-    printFolderList(folder.data[i])
+   mapFolderName(folder.data[i])
   }
 }
 

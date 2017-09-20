@@ -4,6 +4,7 @@ let folderData = [
       id: 1,
       longURL:  'www.longURL1.com',
       shortURL: 'aaa111',
+      url_name: 'longURL1',
       folder_id: 1
     }
   ]},
@@ -12,6 +13,7 @@ let folderData = [
       id: 2,
       longURL:  'www.longURL2.com',
       shortURL: 'bbb222',
+      url_name: 'longURL2',
       folder_id: 1
     }
   ]},
@@ -20,6 +22,7 @@ let folderData = [
       id: 3,
       longURL:  'www.longURL3.com',
       shortURL: 'ccc333',
+      url_name: 'longURL3',
       folder_id: 1
     }
   ]}

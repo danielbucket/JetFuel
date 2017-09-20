@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha",
-    "start": "node server/server.js"
+    "start": "nodemon server/server.js"
   },
   "keywords": [],
   "author": "",

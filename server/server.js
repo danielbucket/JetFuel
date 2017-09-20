@@ -14,15 +14,16 @@ app.set('port', process.env.PORT || 3300)
 
 app.use(express.static(path.join(__dirname + '/../public')))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded( {extended: true} ))
+app.use(bodyParser.urlencoded( { extended:true } ))
 
 app.get('/', (request, response) => {
   response.sendFile(path.join(__dirname + '/../public/index.html'))
 })
 
+
+
 // GET ALL EXISTING FOLDERS FROM THE SERVER // **
 app.get('/api/v1/folders/', (request, response) => {
-  console.log('hit')
   db('folders').select()
   .then(data => response.status(200).json({ data }))
   .catch(error => response.status(500).json({ error }))
