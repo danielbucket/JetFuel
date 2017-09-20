@@ -92,7 +92,8 @@ app.post('/api/v1/shortURL', (request, response) => {
   const newShortURL = {
     folder_id: request.body.folder_id,
     shortURL: shortHash(request.body.shortURL),
-    longURL: request.body.shortURL
+    longURL: request.body.shortURL,
+    url_name: request.body.url_name
    }
 
   db('urls').insert(newShortURL, "*")

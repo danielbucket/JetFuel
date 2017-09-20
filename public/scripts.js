@@ -26,7 +26,8 @@ const printFolderDetailsList = data => {
 
   let path = `api/v1/shortURL/${data.shortURL}`
   $('.folder-contents-display').append(
-    `<li><a href="${path}" class="folder-item">${path}</a>
+    `<div>${data.url_name}</div>
+    <li><a href="${path}" class="folder-item">${path}</a>
     <div class="creation-date">Created On: ${time}</div></li>`
   )
 }
@@ -55,23 +56,27 @@ const printAllFolders = folder => {
 }
 
 const fetchAllFolders = () => {
-  fetch('/api/v1/folders/')
+  fetch('/api/v1/folders')
   .then(resp => resp.json())
   .then(data => printAllFolders(data))
   .catch(error => console.log('ERROR: GET folders @ fetchAllFolders: ', error))
 }
 
 const postNewFolderAndURL = data => {
-  fetch('/api/v1/folders/', {
+  fetch('/api/v1/folders', {
     method: "POST",
     body: JSON.stringify({ name:data.name }),
     headers: { "Content-Type": "application/json" }
   })
   .then(resp => resp.json())
   .then(folderID => {
-    fetch('/api/v1/shortURL/', {
+    fetch('/api/v1/shortURL', {
       method: "POST",
-      body: JSON.stringify({ folder_id:folderID.id, shortURL:data.url }),
+      body: JSON.stringify({
+        folder_id:folderID.id,
+        shortURL:data.url,
+        url_name: data.name
+      }),
       headers: {"Content-Type":"application/json"}
     })
     .then(resp => resp.json())
@@ -81,10 +86,14 @@ const postNewFolderAndURL = data => {
   .catch(error => console.log('error posting to "folders": ', error))
 }
 
-const postNewURL = (id, url) => {
+const postNewURL = (id, url, name) => {
   fetch('/api/v1/shortURL/', {
     method: "POST",
-    body: JSON.stringify({ folder_id:id, shortURL:url }),
+    body: JSON.stringify({
+      folder_id:id,
+      shortURL:url,
+      url_name:name
+    }),
     headers: { "Content-Type": "application/json" }
   })
   .then(resp => resp.json())
@@ -108,24 +117,25 @@ const makeNewOrAdd = data => {
 
   $('.folder-item').each((i,val) => {
     if(val.innerText === data.name) {
-      nameArray.push({ id:val.id, shortURL:data.url })
+      nameArray.push({ id:val.id, shortURL:data.url, name:data.url_name })
     }
   })
-
+ // COME BACK HERE
   if(nameArray.length === 1) {
-    postNewURL(nameArray[0].id, nameArray[0].shortURL)
+    postNewURL(nameArray[0].id, nameArray[0].shortURL, nameArray[0].name)
     printFolderDetails([nameArray[0].id])
   } else {
     postNewFolderAndURL(data)
   }
 }
 
-const isUrlValid = (userURL, folder) => {
+const isUrlValid = (userURL, folder, name) => {
   var regexQuery = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
   var url = new RegExp(regexQuery,"i")
 
   if(url.test(userURL)) {
-    makeNewOrAdd({ url:userURL, name:folder })
+    makeNewOrAdd({ url:userURL, name:folder, url_name:name })
+
     $('#new-folder-input')[0].value = newFolderText
     $('#new-url-input')[0].value = newUrlText
   } else {
@@ -176,8 +186,9 @@ $('#new-url-input').on('keyup', () => activateSubmitBtn())
 $('.submit-btn').on('click', () => {
   const url = $('#new-url-input').val()
   const folder = $('#new-folder-input').val()
+  const name = $('#new-url-name-input').val()
 
-  isUrlValid(url, folder)
+  isUrlValid(url, folder, name)
 })
 
 $(document).ready(() => {
